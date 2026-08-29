@@ -17,6 +17,7 @@ from fastapi.responses import JSONResponse
 
 from backend.routes.ipo import router as ipo_router
 from backend.schemas import ErrorResponse
+from backend.mcp_server import mcp_server
 
 # Configure logging
 logging.basicConfig(
@@ -46,6 +47,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     from arthaprama.ipo import growth, risk, valuation, scoring
 
     logger.info("All modules loaded successfully.")
+    
+    # Initialize MCP SSE transport
+    logger.info("Initializing MCP SSE transport...")
+    try:
+        # Mount MCP SSE routes onto the FastAPI app
+        mcp_server.mount_sse_routes(app)
+        logger.info("MCP SSE transport mounted successfully at /sse endpoint")
+    except Exception as e:
+        logger.warning(f"MCP SSE initialization skipped (may not be required): {e}")
+    
     logger.info("Arthaprama API is ready to accept requests.")
 
     yield

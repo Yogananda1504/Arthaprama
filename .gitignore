@@ -1,37 +1,42 @@
 ```
 # Dependencies
+.venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Logs
 *.log
-*.pot
-*.pyc
-*.pyo
-*.pyd
-.MF
-tags
-TAGS
-.idlerc/
-.project
-.pydevproject
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
 *.swp
 *.swo
-*~
-.DS_Store
-Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.coverage.*
+.nox/
+.tox/
+
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
 ```

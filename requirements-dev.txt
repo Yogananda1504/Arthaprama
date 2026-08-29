@@ -29,6 +29,9 @@ ruff==0.1.14
 black==24.1.0
 flake8==7.0.0
 
+# Model Context Protocol (MCP) SDK
+mcp[cli]>=1.0.0
+
 # Documentation
 mkdocs==1.5.3
 mkdocs-material==9.5.3
