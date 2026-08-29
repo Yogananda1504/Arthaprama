@@ -14,9 +14,7 @@ import io
 import json
 from typing import Any
 
-import pytest
 from fastapi.testclient import TestClient
-
 
 # =============================================================================
 # ANALYZE ENDPOINT TESTS

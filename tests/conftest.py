@@ -8,12 +8,10 @@ and test client setup used across unit and integration tests.
 from __future__ import annotations
 
 import json
-from decimal import Decimal
 from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
-
 
 # =============================================================================
 # FIXTURES FOR IPO TEST DATA

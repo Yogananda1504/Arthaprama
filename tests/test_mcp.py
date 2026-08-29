@@ -8,14 +8,11 @@ functions in arthaprama/ipo/ and that SSE connection lifecycle works properly.
 
 from __future__ import annotations
 
-import pytest
-from typing import Any
-
 from backend.mcp_server import (
     calculate_ipo_growth,
     evaluate_ipo_risk,
-    model_ipo_valuation,
     generate_composite_ipo_score,
+    model_ipo_valuation,
     run_full_ipo_workflow,
 )
 

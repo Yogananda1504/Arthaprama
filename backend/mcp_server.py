@@ -18,19 +18,19 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from arthaprama.ipo.growth import (
-    calculate_all_growth_metrics,
     GrowthCalculationError,
+    calculate_all_growth_metrics,
 )
 from arthaprama.ipo.risk import (
-    calculate_all_risk_metrics,
     RiskCalculationError,
+    calculate_all_risk_metrics,
 )
+from arthaprama.ipo.scoring import ScoreBreakdown, generate_ipo_score
 from arthaprama.ipo.valuation import (
-    calculate_all_valuation_metrics,
     ValuationCalculationError,
+    calculate_all_valuation_metrics,
 )
-from arthaprama.ipo.scoring import generate_ipo_score, ScoreBreakdown
-from arthaprama.ipo.workflow import run_full_ipo_analysis, FullIPOAnalysisResult
+from arthaprama.ipo.workflow import FullIPOAnalysisResult, run_full_ipo_analysis
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -136,11 +136,8 @@ def calculate_ipo_growth(
         return {"success": True, "metrics": metrics_float}
 
     except GrowthCalculationError as e:
-        logger.error(f"Growth calculation error: {e}")
+        logger.error("Growth calculation error: %s", e)
         return {"success": False, "error": str(e)}
-    except Exception as e:
-        logger.error(f"Unexpected error in growth calculation: {e}")
-        return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
 
 @mcp_server.tool()
@@ -309,11 +306,8 @@ def evaluate_ipo_risk(
         }
 
     except RiskCalculationError as e:
-        logger.error(f"Risk calculation error: {e}")
+        logger.error("Risk calculation error: %s", e)
         return {"success": False, "error": str(e)}
-    except Exception as e:
-        logger.error(f"Unexpected error in risk calculation: {e}")
-        return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
 
 @mcp_server.tool()
@@ -462,7 +456,7 @@ def model_ipo_valuation(
                         (dcf_fair_value - ipo_price) / dcf_fair_value * 100
                     )
             except Exception as e:
-                logger.warning(f"DCF calculation failed: {e}")
+                logger.warning("DCF calculation failed: %s", e)
                 dcf_result["dcf_error"] = str(e)
 
         # Determine valuation assessment
@@ -483,11 +477,8 @@ def model_ipo_valuation(
         }
 
     except ValuationCalculationError as e:
-        logger.error(f"Valuation calculation error: {e}")
+        logger.error("Valuation calculation error: %s", e)
         return {"success": False, "error": str(e)}
-    except Exception as e:
-        logger.error(f"Unexpected error in valuation calculation: {e}")
-        return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
 
 @mcp_server.tool()
@@ -857,7 +848,7 @@ def run_full_ipo_workflow(
         }
 
     except Exception as e:
-        logger.error(f"Full IPO workflow error: {e}", exc_info=True)
+        logger.exception("Full IPO workflow error: %s", e)
         return {
             "success": False,
             "error": str(e),

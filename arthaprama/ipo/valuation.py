@@ -11,14 +11,13 @@ to maintain mathematical accuracy throughout the computation chain.
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 
 class ValuationCalculationError(Exception):
     """Exception raised when valuation calculations encounter invalid inputs."""
 
-    pass
 
 
 def _to_decimal(value: Any) -> Decimal:
@@ -297,7 +296,7 @@ def earnings_yield(eps: Any, ipo_price: Any, precision: int = 4) -> Decimal:
     if price == 0:
         raise ValuationCalculationError("IPO price cannot be zero")
 
-    yield_val = (earnings / price) * Decimal("100")
+    yield_val = (earnings / price) * Decimal(100)
     return yield_val.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -399,7 +398,7 @@ def pe_premium_vs_peer(ipo_pe: Any, peer_median_pe: Any, precision: int = 4) -> 
     if peer == 0:
         raise ValuationCalculationError("Peer median P/E cannot be zero")
 
-    premium = ((ipo - peer) / peer) * Decimal("100")
+    premium = ((ipo - peer) / peer) * Decimal(100)
     return premium.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -433,7 +432,7 @@ def ev_ebitda_premium_vs_peer(ipo_ev_ebitda: Any, peer_median: Any, precision: i
     if peer == 0:
         raise ValuationCalculationError("Peer median EV/EBITDA cannot be zero")
 
-    premium = ((ipo - peer) / peer) * Decimal("100")
+    premium = ((ipo - peer) / peer) * Decimal(100)
     return premium.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -472,7 +471,7 @@ def ipo_dilution(new_shares: Any, post_ipo_shares: Any, precision: int = 4) -> D
     if post == 0:
         raise ValuationCalculationError("Post-IPO shares cannot be zero")
 
-    dilution = (new / post) * Decimal("100")
+    dilution = (new / post) * Decimal(100)
     return dilution.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -550,7 +549,7 @@ def calculate_all_valuation_metrics(
         )
         results["enterprise_value"] = ev
     except ValuationCalculationError:
-        results["enterprise_value"] = Decimal("0")
+        results["enterprise_value"] = Decimal(0)
 
     # Absolute Valuation Metrics
     try:
@@ -562,7 +561,7 @@ def calculate_all_valuation_metrics(
             precision=precision,
         )
     except ValuationCalculationError:
-        results["pe_ratio"] = Decimal("0")
+        results["pe_ratio"] = Decimal(0)
 
     try:
         results["pb_ratio"] = pb_ratio(
@@ -571,7 +570,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["pb_ratio"] = Decimal("0")
+        results["pb_ratio"] = Decimal(0)
 
     try:
         results["ps_ratio"] = ps_ratio(
@@ -580,7 +579,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["ps_ratio"] = Decimal("0")
+        results["ps_ratio"] = Decimal(0)
 
     try:
         results["ev_to_ebitda"] = ev_to_ebitda(
@@ -589,7 +588,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["ev_to_ebitda"] = Decimal("0")
+        results["ev_to_ebitda"] = Decimal(0)
 
     try:
         results["ev_to_sales"] = ev_to_sales(
@@ -598,7 +597,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["ev_to_sales"] = Decimal("0")
+        results["ev_to_sales"] = Decimal(0)
 
     try:
         results["peg_ratio"] = peg_ratio(
@@ -607,7 +606,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["peg_ratio"] = Decimal("0")
+        results["peg_ratio"] = Decimal(0)
 
     try:
         results["earnings_yield"] = earnings_yield(
@@ -616,7 +615,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["earnings_yield"] = Decimal("0")
+        results["earnings_yield"] = Decimal(0)
 
     try:
         results["price_to_fcf"] = price_to_fcf(
@@ -625,7 +624,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["price_to_fcf"] = Decimal("0")
+        results["price_to_fcf"] = Decimal(0)
 
     # Relative Valuation Metrics
     if peer.get("peer_median_pe"):
@@ -636,9 +635,9 @@ def calculate_all_valuation_metrics(
                 precision,
             )
         except ValuationCalculationError:
-            results["pe_premium_vs_peer"] = Decimal("0")
+            results["pe_premium_vs_peer"] = Decimal(0)
     else:
-        results["pe_premium_vs_peer"] = Decimal("0")
+        results["pe_premium_vs_peer"] = Decimal(0)
 
     if peer.get("peer_median_ev_ebitda"):
         try:
@@ -648,9 +647,9 @@ def calculate_all_valuation_metrics(
                 precision,
             )
         except ValuationCalculationError:
-            results["ev_ebitda_premium_vs_peer"] = Decimal("0")
+            results["ev_ebitda_premium_vs_peer"] = Decimal(0)
     else:
-        results["ev_ebitda_premium_vs_peer"] = Decimal("0")
+        results["ev_ebitda_premium_vs_peer"] = Decimal(0)
 
     # IPO-Specific Metrics
     try:
@@ -660,7 +659,7 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["ipo_dilution"] = Decimal("0")
+        results["ipo_dilution"] = Decimal(0)
 
     try:
         results["post_ipo_eps"] = post_ipo_eps(
@@ -669,6 +668,6 @@ def calculate_all_valuation_metrics(
             precision,
         )
     except ValuationCalculationError:
-        results["post_ipo_eps"] = Decimal("0")
+        results["post_ipo_eps"] = Decimal(0)
 
     return results

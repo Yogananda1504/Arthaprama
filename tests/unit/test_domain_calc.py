@@ -10,67 +10,62 @@ This module verifies the mathematical correctness of:
 
 from __future__ import annotations
 
-import pytest
 from decimal import Decimal
 
-from arthaprama.ipo.growth import (
-    revenue_growth_yoy,
-    profit_growth_yoy,
-    ebitda_growth_yoy,
-    eps_growth_yoy,
-    revenue_cagr_3yr,
-    pat_cagr_3yr,
-    ebitda_margin,
-    pat_margin,
-    roe,
-    roce,
-    cfo_growth,
-    calculate_all_growth_metrics,
-    GrowthCalculationError,
-)
+import pytest
 
+from arthaprama.ipo.growth import (
+    GrowthCalculationError,
+    calculate_all_growth_metrics,
+    cfo_growth,
+    ebitda_growth_yoy,
+    ebitda_margin,
+    eps_growth_yoy,
+    pat_cagr_3yr,
+    pat_margin,
+    profit_growth_yoy,
+    revenue_cagr_3yr,
+    revenue_growth_yoy,
+    roce,
+    roe,
+)
 from arthaprama.ipo.risk import (
-    debt_to_equity,
-    net_debt,
-    net_debt_to_ebitda,
-    interest_coverage,
-    current_ratio,
-    quick_ratio,
+    calculate_all_risk_metrics,
     cfo_to_debt,
     cfo_to_pat,
-    free_cash_flow,
-    fcf_to_pat,
-    customer_concentration,
-    promoter_pledge_ratio,
     contingent_liabilities_to_nw,
-    calculate_all_risk_metrics,
-    RiskCalculationError,
+    current_ratio,
+    customer_concentration,
+    debt_to_equity,
+    fcf_to_pat,
+    free_cash_flow,
+    interest_coverage,
+    net_debt,
+    net_debt_to_ebitda,
+    promoter_pledge_ratio,
+    quick_ratio,
 )
-
-from arthaprama.ipo.valuation import (
-    pe_ratio,
-    pb_ratio,
-    ps_ratio,
-    ev_to_ebitda,
-    ev_to_sales,
-    peg_ratio,
-    earnings_yield,
-    price_to_fcf,
-    enterprise_value,
-    pe_premium_vs_peer,
-    ev_ebitda_premium_vs_peer,
-    ipo_dilution,
-    post_ipo_eps,
-    calculate_all_valuation_metrics,
-    ValuationCalculationError,
-)
-
 from arthaprama.ipo.scoring import (
-    generate_ipo_score,
     ScoreBreakdown,
     _normalize_to_scale,
+    generate_ipo_score,
 )
-
+from arthaprama.ipo.valuation import (
+    calculate_all_valuation_metrics,
+    earnings_yield,
+    enterprise_value,
+    ev_ebitda_premium_vs_peer,
+    ev_to_ebitda,
+    ev_to_sales,
+    ipo_dilution,
+    pb_ratio,
+    pe_premium_vs_peer,
+    pe_ratio,
+    peg_ratio,
+    post_ipo_eps,
+    price_to_fcf,
+    ps_ratio,
+)
 
 # =============================================================================
 # GROWTH CALCULATION TESTS
@@ -390,30 +385,30 @@ class TestScoringCalculations:
     def test_normalize_to_scale_middle(self) -> None:
         """Test normalization to scale at middle value."""
         result = _normalize_to_scale(
-            value=Decimal("50"),
-            min_val=Decimal("0"),
-            max_val=Decimal("100"),
-            scale=Decimal("10"),
+            value=Decimal(50),
+            min_val=Decimal(0),
+            max_val=Decimal(100),
+            scale=Decimal(10),
         )
         assert result == Decimal("5.00")
 
     def test_normalize_to_scale_min(self) -> None:
         """Test normalization to scale at minimum value."""
         result = _normalize_to_scale(
-            value=Decimal("0"),
-            min_val=Decimal("0"),
-            max_val=Decimal("100"),
-            scale=Decimal("10"),
+            value=Decimal(0),
+            min_val=Decimal(0),
+            max_val=Decimal(100),
+            scale=Decimal(10),
         )
         assert result == Decimal("0.00")
 
     def test_normalize_to_scale_max(self) -> None:
         """Test normalization to scale at maximum value."""
         result = _normalize_to_scale(
-            value=Decimal("100"),
-            min_val=Decimal("0"),
-            max_val=Decimal("100"),
-            scale=Decimal("10"),
+            value=Decimal(100),
+            min_val=Decimal(0),
+            max_val=Decimal(100),
+            scale=Decimal(10),
         )
         assert result == Decimal("10.00")
 

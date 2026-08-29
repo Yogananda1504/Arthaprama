@@ -16,13 +16,13 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any
 
-from arthaprama.ipo.growth import calculate_all_growth_metrics, GrowthCalculationError
-from arthaprama.ipo.risk import calculate_all_risk_metrics, RiskCalculationError
+from arthaprama.ipo.growth import GrowthCalculationError, calculate_all_growth_metrics
+from arthaprama.ipo.risk import RiskCalculationError, calculate_all_risk_metrics
+from arthaprama.ipo.scoring import ScoreBreakdown, generate_ipo_score
 from arthaprama.ipo.valuation import (
-    calculate_all_valuation_metrics,
     ValuationCalculationError,
+    calculate_all_valuation_metrics,
 )
-from arthaprama.ipo.scoring import generate_ipo_score, ScoreBreakdown
 
 
 @dataclass
@@ -102,7 +102,6 @@ class FullIPOAnalysisResult:
 class IPOWorkflowError(Exception):
     """Exception raised when workflow execution fails."""
 
-    pass
 
 
 def run_full_ipo_analysis(
@@ -199,14 +198,7 @@ def run_full_ipo_analysis(
             errors=[str(e)],
             success=False,
         )
-        result.errors.append(f"Growth calculation error: {str(e)}")
-    except Exception as e:
-        result.growth_analysis = GrowthAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Growth calculation failed: {str(e)}")
+        result.errors.append(f"Growth calculation error: {e!s}")
 
     # Step 2: Calculate Risk Metrics
     try:
@@ -222,14 +214,7 @@ def run_full_ipo_analysis(
             errors=[str(e)],
             success=False,
         )
-        result.errors.append(f"Risk calculation error: {str(e)}")
-    except Exception as e:
-        result.risk_analysis = RiskAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Risk calculation failed: {str(e)}")
+        result.errors.append(f"Risk calculation error: {e!s}")
 
     # Step 3: Calculate Valuation Metrics
     try:
@@ -245,14 +230,7 @@ def run_full_ipo_analysis(
             errors=[str(e)],
             success=False,
         )
-        result.errors.append(f"Valuation calculation error: {str(e)}")
-    except Exception as e:
-        result.valuation_analysis = ValuationAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Valuation calculation failed: {str(e)}")
+        result.errors.append(f"Valuation calculation error: {e!s}")
 
     # Step 4: Generate Composite Score (only if all analyses succeeded or have partial data)
     try:
@@ -268,7 +246,7 @@ def run_full_ipo_analysis(
         )
         result.composite_score = composite
     except Exception as e:
-        result.errors.append(f"Scoring failed: {str(e)}")
+        result.errors.append(f"Scoring failed: {e!s}")
         result.composite_score = None
 
     # Determine overall success

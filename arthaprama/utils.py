@@ -7,7 +7,7 @@ including conversions to Lakhs and Crores, and INR currency formatting.
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
 
@@ -111,7 +111,7 @@ def format_inr_lakh(value: Any, precision: int = 2) -> str:
         '₹50.00 Lakh'
     """
     decimal_value = _to_decimal(value)
-    lakhs = decimal_value / Decimal("100000")
+    lakhs = decimal_value / Decimal(100000)
     formatted_lakhs = lakhs.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
     if formatted_lakhs == 1:
@@ -139,7 +139,7 @@ def format_inr_cr(value: Any, precision: int = 2) -> str:
         '₹5.00 Cr'
     """
     decimal_value = _to_decimal(value)
-    crores = decimal_value / Decimal("10000000")
+    crores = decimal_value / Decimal(10000000)
     formatted_crores = crores.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
     return f"₹{formatted_crores} Cr"
 
@@ -160,7 +160,7 @@ def to_lakhs(value: Any, precision: int = 4) -> Decimal:
         Decimal('10.0000')
     """
     decimal_value = _to_decimal(value)
-    return (decimal_value / Decimal("100000")).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
+    return (decimal_value / Decimal(100000)).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
 def to_crores(value: Any, precision: int = 4) -> Decimal:
@@ -179,7 +179,7 @@ def to_crores(value: Any, precision: int = 4) -> Decimal:
         Decimal('1.0000')
     """
     decimal_value = _to_decimal(value)
-    return (decimal_value / Decimal("10000000")).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
+    return (decimal_value / Decimal(10000000)).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
 def format_percentage(value: Any, precision: int = 2, include_sign: bool = False) -> str:
@@ -243,9 +243,9 @@ def smart_format_inr(value: Any, precision: int = 2) -> str:
     decimal_value = _to_decimal(value)
     abs_value = abs(decimal_value)
 
-    if abs_value >= Decimal("10000000"):  # 1 Crore or more
+    if abs_value >= Decimal(10000000):  # 1 Crore or more
         return format_inr_cr(decimal_value, precision)
-    elif abs_value >= Decimal("100000"):  # 1 Lakh or more
+    elif abs_value >= Decimal(100000):  # 1 Lakh or more
         return format_inr_lakh(decimal_value, precision)
     else:
         return format_inr(decimal_value, precision)
@@ -281,13 +281,13 @@ def parse_indian_number(value: str) -> Decimal:
     upper_cleaned = cleaned.upper()
 
     if "CR" in upper_cleaned or "CRORE" in upper_cleaned:
-        multiplier = Decimal("10000000")
+        multiplier = Decimal(10000000)
         num_str = cleaned.upper().replace("CR", "").replace("CRORE", "").strip()
     elif "LAKH" in upper_cleaned:
-        multiplier = Decimal("100000")
+        multiplier = Decimal(100000)
         num_str = cleaned.upper().replace("LAKH", "").strip()
     else:
-        multiplier = Decimal("1")
+        multiplier = Decimal(1)
         num_str = cleaned
 
     # Remove any remaining non-numeric characters except decimal point and minus

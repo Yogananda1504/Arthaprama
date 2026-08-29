@@ -19,25 +19,25 @@ class FinancialYearData(BaseModel):
     revenue: Decimal = Field(..., description="Total revenue for the year", ge=0)
     pat: Decimal = Field(..., description="Profit After Tax", ge=0)
     ebitda: Decimal = Field(..., description="EBITDA", ge=0)
-    ebit: Decimal = Field(default=Decimal("0"), description="EBIT", ge=0)
-    eps: Decimal = Field(default=Decimal("0"), description="Earnings Per Share", ge=0)
-    cfo: Decimal = Field(default=Decimal("0"), description="Cash Flow from Operations")
-    capex: Decimal = Field(default=Decimal("0"), description="Capital Expenditure", ge=0)
-    total_assets: Decimal = Field(default=Decimal("0"), description="Total Assets", ge=0)
-    total_liabilities: Decimal = Field(default=Decimal("0"), description="Total Liabilities", ge=0)
+    ebit: Decimal = Field(default=Decimal(0), description="EBIT", ge=0)
+    eps: Decimal = Field(default=Decimal(0), description="Earnings Per Share", ge=0)
+    cfo: Decimal = Field(default=Decimal(0), description="Cash Flow from Operations")
+    capex: Decimal = Field(default=Decimal(0), description="Capital Expenditure", ge=0)
+    total_assets: Decimal = Field(default=Decimal(0), description="Total Assets", ge=0)
+    total_liabilities: Decimal = Field(default=Decimal(0), description="Total Liabilities", ge=0)
 
 
 class BalanceSheetData(BaseModel):
     """Schema for balance sheet data."""
 
-    total_debt: Decimal = Field(default=Decimal("0"), description="Total Debt", ge=0)
-    shareholders_equity: Decimal = Field(default=Decimal("0"), description="Shareholders Equity", ge=0)
-    cash_equivalents: Decimal = Field(default=Decimal("0"), description="Cash & Cash Equivalents", ge=0)
-    current_assets: Decimal = Field(default=Decimal("0"), description="Current Assets", ge=0)
-    current_liabilities: Decimal = Field(default=Decimal("0"), description="Current Liabilities", ge=0)
-    inventory: Decimal = Field(default=Decimal("0"), description="Inventory", ge=0)
-    net_worth: Decimal = Field(default=Decimal("0"), description="Net Worth", ge=0)
-    contingent_liabilities: Decimal = Field(default=Decimal("0"), description="Contingent Liabilities", ge=0)
+    total_debt: Decimal = Field(default=Decimal(0), description="Total Debt", ge=0)
+    shareholders_equity: Decimal = Field(default=Decimal(0), description="Shareholders Equity", ge=0)
+    cash_equivalents: Decimal = Field(default=Decimal(0), description="Cash & Cash Equivalents", ge=0)
+    current_assets: Decimal = Field(default=Decimal(0), description="Current Assets", ge=0)
+    current_liabilities: Decimal = Field(default=Decimal(0), description="Current Liabilities", ge=0)
+    inventory: Decimal = Field(default=Decimal(0), description="Inventory", ge=0)
+    net_worth: Decimal = Field(default=Decimal(0), description="Net Worth", ge=0)
+    contingent_liabilities: Decimal = Field(default=Decimal(0), description="Contingent Liabilities", ge=0)
 
 
 class GrowthDataInput(BaseModel):
@@ -45,86 +45,86 @@ class GrowthDataInput(BaseModel):
 
     revenue_current: Decimal = Field(..., description="Current period revenue", ge=0)
     revenue_previous: Decimal = Field(..., description="Previous period revenue", ge=0)
-    revenue_3yrs_ago: Decimal = Field(default=Decimal("0"), description="Revenue 3 years ago", ge=0)
+    revenue_3yrs_ago: Decimal = Field(default=Decimal(0), description="Revenue 3 years ago", ge=0)
     pat_current: Decimal = Field(..., description="Current period PAT", ge=0)
     pat_previous: Decimal = Field(..., description="Previous period PAT", ge=0)
-    pat_3yrs_ago: Decimal = Field(default=Decimal("0"), description="PAT 3 years ago", ge=0)
+    pat_3yrs_ago: Decimal = Field(default=Decimal(0), description="PAT 3 years ago", ge=0)
     ebitda_current: Decimal = Field(..., description="Current period EBITDA", ge=0)
     ebitda_previous: Decimal = Field(..., description="Previous period EBITDA", ge=0)
     eps_current: Decimal = Field(..., description="Current period EPS", ge=0)
     eps_previous: Decimal = Field(..., description="Previous period EPS", ge=0)
-    ebit: Decimal = Field(default=Decimal("0"), description="EBIT", ge=0)
-    cfo_current: Decimal = Field(default=Decimal("0"), description="Current CFO")
-    cfo_previous: Decimal = Field(default=Decimal("0"), description="Previous CFO")
-    avg_shareholders_equity: Decimal = Field(default=Decimal("0"), description="Average Shareholders Equity", ge=0)
-    capital_employed: Decimal = Field(default=Decimal("0"), description="Capital Employed", ge=0)
+    ebit: Decimal = Field(default=Decimal(0), description="EBIT", ge=0)
+    cfo_current: Decimal = Field(default=Decimal(0), description="Current CFO")
+    cfo_previous: Decimal = Field(default=Decimal(0), description="Previous CFO")
+    avg_shareholders_equity: Decimal = Field(default=Decimal(0), description="Average Shareholders Equity", ge=0)
+    capital_employed: Decimal = Field(default=Decimal(0), description="Capital Employed", ge=0)
 
 
 class RiskDataInput(BaseModel):
     """Schema for risk calculation inputs."""
 
-    total_debt: Decimal = Field(default=Decimal("0"), description="Total Debt", ge=0)
-    shareholders_equity: Decimal = Field(default=Decimal("0"), description="Shareholders Equity", ge=0)
-    cash_equivalents: Decimal = Field(default=Decimal("0"), description="Cash & Cash Equivalents", ge=0)
-    ebitda: Decimal = Field(default=Decimal("0"), description="EBITDA", ge=0)
-    ebit: Decimal = Field(default=Decimal("0"), description="EBIT", ge=0)
-    interest_expense: Decimal = Field(default=Decimal("0"), description="Interest Expense", ge=0)
-    current_assets: Decimal = Field(default=Decimal("0"), description="Current Assets", ge=0)
-    current_liabilities: Decimal = Field(default=Decimal("0"), description="Current Liabilities", ge=0)
-    inventory: Decimal = Field(default=Decimal("0"), description="Inventory", ge=0)
-    cfo: Decimal = Field(default=Decimal("0"), description="Cash Flow from Operations")
-    pat: Decimal = Field(default=Decimal("0"), description="Profit After Tax")
-    capex: Decimal = Field(default=Decimal("0"), description="Capital Expenditure", ge=0)
-    largest_customer_rev: Decimal = Field(default=Decimal("0"), description="Revenue from Largest Customer", ge=0)
-    total_rev: Decimal = Field(default=Decimal("0"), description="Total Revenue", ge=0)
-    pledged_shares: Decimal = Field(default=Decimal("0"), description="Pledged Shares", ge=0)
-    total_promoter_shares: Decimal = Field(default=Decimal("0"), description="Total Promoter Shares", ge=0)
-    contingent_liabilities: Decimal = Field(default=Decimal("0"), description="Contingent Liabilities", ge=0)
-    net_worth: Decimal = Field(default=Decimal("0"), description="Net Worth", ge=0)
+    total_debt: Decimal = Field(default=Decimal(0), description="Total Debt", ge=0)
+    shareholders_equity: Decimal = Field(default=Decimal(0), description="Shareholders Equity", ge=0)
+    cash_equivalents: Decimal = Field(default=Decimal(0), description="Cash & Cash Equivalents", ge=0)
+    ebitda: Decimal = Field(default=Decimal(0), description="EBITDA", ge=0)
+    ebit: Decimal = Field(default=Decimal(0), description="EBIT", ge=0)
+    interest_expense: Decimal = Field(default=Decimal(0), description="Interest Expense", ge=0)
+    current_assets: Decimal = Field(default=Decimal(0), description="Current Assets", ge=0)
+    current_liabilities: Decimal = Field(default=Decimal(0), description="Current Liabilities", ge=0)
+    inventory: Decimal = Field(default=Decimal(0), description="Inventory", ge=0)
+    cfo: Decimal = Field(default=Decimal(0), description="Cash Flow from Operations")
+    pat: Decimal = Field(default=Decimal(0), description="Profit After Tax")
+    capex: Decimal = Field(default=Decimal(0), description="Capital Expenditure", ge=0)
+    largest_customer_rev: Decimal = Field(default=Decimal(0), description="Revenue from Largest Customer", ge=0)
+    total_rev: Decimal = Field(default=Decimal(0), description="Total Revenue", ge=0)
+    pledged_shares: Decimal = Field(default=Decimal(0), description="Pledged Shares", ge=0)
+    total_promoter_shares: Decimal = Field(default=Decimal(0), description="Total Promoter Shares", ge=0)
+    contingent_liabilities: Decimal = Field(default=Decimal(0), description="Contingent Liabilities", ge=0)
+    net_worth: Decimal = Field(default=Decimal(0), description="Net Worth", ge=0)
 
 
 class ValuationDataInput(BaseModel):
     """Schema for valuation calculation inputs."""
 
     market_cap: Decimal = Field(..., description="Market Capitalization", ge=0)
-    pat: Decimal = Field(default=Decimal("0"), description="Profit After Tax")
-    book_value: Decimal = Field(default=Decimal("0"), description="Book Value", ge=0)
-    revenue: Decimal = Field(default=Decimal("0"), description="Revenue", ge=0)
-    ebitda: Decimal = Field(default=Decimal("0"), description="EBITDA", ge=0)
-    eps: Decimal = Field(default=Decimal("0"), description="Earnings Per Share")
-    ipo_price: Decimal = Field(default=Decimal("0"), description="IPO Price", ge=0)
-    total_debt: Decimal = Field(default=Decimal("0"), description="Total Debt", ge=0)
-    cash_equivalents: Decimal = Field(default=Decimal("0"), description="Cash & Cash Equivalents", ge=0)
-    free_cash_flow: Decimal = Field(default=Decimal("0"), description="Free Cash Flow")
-    new_shares: Decimal = Field(default=Decimal("0"), description="New Shares Issued", ge=0)
-    post_ipo_shares: Decimal = Field(default=Decimal("0"), description="Post-IPO Shares", ge=0)
-    post_ipo_diluted_shares: Decimal = Field(default=Decimal("0"), description="Post-IPO Diluted Shares", ge=0)
-    post_ipo_pat: Decimal = Field(default=Decimal("0"), description="Post-IPO PAT")
-    expected_eps_growth_pct: Decimal = Field(default=Decimal("0"), description="Expected EPS Growth %")
+    pat: Decimal = Field(default=Decimal(0), description="Profit After Tax")
+    book_value: Decimal = Field(default=Decimal(0), description="Book Value", ge=0)
+    revenue: Decimal = Field(default=Decimal(0), description="Revenue", ge=0)
+    ebitda: Decimal = Field(default=Decimal(0), description="EBITDA", ge=0)
+    eps: Decimal = Field(default=Decimal(0), description="Earnings Per Share")
+    ipo_price: Decimal = Field(default=Decimal(0), description="IPO Price", ge=0)
+    total_debt: Decimal = Field(default=Decimal(0), description="Total Debt", ge=0)
+    cash_equivalents: Decimal = Field(default=Decimal(0), description="Cash & Cash Equivalents", ge=0)
+    free_cash_flow: Decimal = Field(default=Decimal(0), description="Free Cash Flow")
+    new_shares: Decimal = Field(default=Decimal(0), description="New Shares Issued", ge=0)
+    post_ipo_shares: Decimal = Field(default=Decimal(0), description="Post-IPO Shares", ge=0)
+    post_ipo_diluted_shares: Decimal = Field(default=Decimal(0), description="Post-IPO Diluted Shares", ge=0)
+    post_ipo_pat: Decimal = Field(default=Decimal(0), description="Post-IPO PAT")
+    expected_eps_growth_pct: Decimal = Field(default=Decimal(0), description="Expected EPS Growth %")
 
 
 class PeerDataInput(BaseModel):
     """Schema for peer comparison data."""
 
-    peer_median_pe: Decimal = Field(default=Decimal("0"), description="Peer Median P/E Ratio")
-    peer_median_ev_ebitda: Decimal = Field(default=Decimal("0"), description="Peer Median EV/EBITDA")
-    peer_median_pb: Decimal = Field(default=Decimal("0"), description="Peer Median P/B Ratio")
+    peer_median_pe: Decimal = Field(default=Decimal(0), description="Peer Median P/E Ratio")
+    peer_median_ev_ebitda: Decimal = Field(default=Decimal(0), description="Peer Median EV/EBITDA")
+    peer_median_pb: Decimal = Field(default=Decimal(0), description="Peer Median P/B Ratio")
     peer_market_caps: list[Decimal] = Field(default_factory=list, description="List of Peer Market Caps")
 
 
 class IPOSpecificDataInput(BaseModel):
     """Schema for IPO-specific data inputs."""
 
-    ipo_dilution: Decimal = Field(default=Decimal("0"), description="IPO Dilution %", ge=0, le=100)
-    promoter_holding_pre_ipo: Decimal = Field(default=Decimal("0"), description="Promoter Holding Pre-IPO %", ge=0, le=100)
-    promoter_holding_post_ipo: Decimal = Field(default=Decimal("0"), description="Promoter Holding Post-IPO %", ge=0, le=100)
-    promoter_pledge_ratio: Decimal = Field(default=Decimal("0"), description="Promoter Pledge Ratio %", ge=0, le=100)
-    issue_size: Decimal = Field(default=Decimal("0"), description="Issue Size", ge=0)
-    fresh_issue: Decimal = Field(default=Decimal("0"), description="Fresh Issue Amount", ge=0)
-    offer_for_sale: Decimal = Field(default=Decimal("0"), description="Offer for Sale Amount", ge=0)
-    lot_size: Decimal = Field(default=Decimal("0"), description="Lot Size", ge=0)
-    price_band_lower: Decimal = Field(default=Decimal("0"), description="Price Band Lower Limit", ge=0)
-    price_band_upper: Decimal = Field(default=Decimal("0"), description="Price Band Upper Limit", ge=0)
+    ipo_dilution: Decimal = Field(default=Decimal(0), description="IPO Dilution %", ge=0, le=100)
+    promoter_holding_pre_ipo: Decimal = Field(default=Decimal(0), description="Promoter Holding Pre-IPO %", ge=0, le=100)
+    promoter_holding_post_ipo: Decimal = Field(default=Decimal(0), description="Promoter Holding Post-IPO %", ge=0, le=100)
+    promoter_pledge_ratio: Decimal = Field(default=Decimal(0), description="Promoter Pledge Ratio %", ge=0, le=100)
+    issue_size: Decimal = Field(default=Decimal(0), description="Issue Size", ge=0)
+    fresh_issue: Decimal = Field(default=Decimal(0), description="Fresh Issue Amount", ge=0)
+    offer_for_sale: Decimal = Field(default=Decimal(0), description="Offer for Sale Amount", ge=0)
+    lot_size: Decimal = Field(default=Decimal(0), description="Lot Size", ge=0)
+    price_band_lower: Decimal = Field(default=Decimal(0), description="Price Band Lower Limit", ge=0)
+    price_band_upper: Decimal = Field(default=Decimal(0), description="Price Band Upper Limit", ge=0)
 
 
 class IPOEvaluationRequest(BaseModel):
@@ -272,11 +272,11 @@ class IPOPOMetadata(BaseModel):
 
     company_name: str = Field(..., description="Name of the company going public")
     sector: str = Field(..., description="Industry sector of the company")
-    price_band_lower: Decimal = Field(default=Decimal("0"), description="Price Band Lower Limit", ge=0)
-    price_band_upper: Decimal = Field(default=Decimal("0"), description="Price Band Upper Limit", ge=0)
-    issue_size: Decimal = Field(default=Decimal("0"), description="Issue Size", ge=0)
-    fresh_issue: Decimal = Field(default=Decimal("0"), description="Fresh Issue Amount", ge=0)
-    offer_for_sale: Decimal = Field(default=Decimal("0"), description="Offer for Sale Amount", ge=0)
+    price_band_lower: Decimal = Field(default=Decimal(0), description="Price Band Lower Limit", ge=0)
+    price_band_upper: Decimal = Field(default=Decimal(0), description="Price Band Upper Limit", ge=0)
+    issue_size: Decimal = Field(default=Decimal(0), description="Issue Size", ge=0)
+    fresh_issue: Decimal = Field(default=Decimal(0), description="Fresh Issue Amount", ge=0)
+    offer_for_sale: Decimal = Field(default=Decimal(0), description="Offer for Sale Amount", ge=0)
 
 
 class FullIPOAnalysisRequest(BaseModel):

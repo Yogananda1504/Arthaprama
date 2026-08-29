@@ -8,16 +8,16 @@ global error hooks, and CORS middleware configurations for the IPO analysis API.
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.mcp_server import mcp_server
 from backend.routes.ipo import router as ipo_router
 from backend.schemas import ErrorResponse
-from backend.mcp_server import mcp_server
 
 # Configure logging
 logging.basicConfig(
@@ -43,8 +43,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Loading mathematical engines...")
 
     # Import core modules to verify they load correctly
-    from arthaprama.config import get_profile
-    from arthaprama.ipo import growth, risk, valuation, scoring
 
     logger.info("All modules loaded successfully.")
     
@@ -54,8 +52,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         # Mount MCP SSE routes onto the FastAPI app
         mcp_server.mount_sse_routes(app)
         logger.info("MCP SSE transport mounted successfully at /sse endpoint")
-    except Exception as e:
-        logger.warning(f"MCP SSE initialization skipped (may not be required): {e}")
+    except Exception:
+        logger.warning("MCP SSE initialization skipped (may not be required)")
     
     logger.info("Arthaprama API is ready to accept requests.")
 
@@ -143,7 +141,7 @@ explicit "BUY"/"SELL" recommendations.
         Returns:
             JSONResponse with error details.
         """
-        logger.error(f"Unhandled exception: {exc}", exc_info=True)
+        logger.exception("Unhandled exception: %s", exc)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=ErrorResponse(

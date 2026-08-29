@@ -10,28 +10,28 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from fastapi import APIRouter, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
-from arthaprama.config import get_profile, ProfileStrategy
+from arthaprama.config import ProfileStrategy, get_profile
 from arthaprama.ipo.growth import calculate_all_growth_metrics
 from arthaprama.ipo.risk import calculate_all_risk_metrics
+from arthaprama.ipo.scoring import generate_ipo_score
 from arthaprama.ipo.valuation import calculate_all_valuation_metrics
-from arthaprama.ipo.scoring import generate_ipo_score, ScoreBreakdown
-from arthaprama.ipo.workflow import run_full_ipo_analysis, IPOWorkflowEngine
+from arthaprama.ipo.workflow import IPOWorkflowEngine
 from backend.schemas import (
-    IPOEvaluationRequest,
-    IPOEvaluationResponse,
-    ScoreBreakdownResponse,
-    GrowthMetricsResponse,
-    RiskMetricsResponse,
-    ValuationMetricsResponse,
     ErrorResponse,
     FullIPOAnalysisRequest,
     FullIPOAnalysisResponse,
     GrowthAnalysisResponse,
+    GrowthMetricsResponse,
+    IPOEvaluationRequest,
+    IPOEvaluationResponse,
     RiskAnalysisResponse,
+    RiskMetricsResponse,
+    ScoreBreakdownResponse,
     ValuationAnalysisResponse,
+    ValuationMetricsResponse,
 )
 
 router = APIRouter(prefix="/api/v1/ipo", tags=["IPO Analysis"])
@@ -175,7 +175,7 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error during evaluation: {str(e)}") from e
+        raise HTTPException(status_code=500, detail=f"Internal error during evaluation: {e!s}") from e
 
 
 @router.get(
@@ -411,11 +411,11 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
         )
 
     except ValidationError as e:
-        raise HTTPException(status_code=422, detail=f"Validation error: {str(e)}") from e
+        raise HTTPException(status_code=422, detail=f"Validation error: {e!s}") from e
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error during analysis: {str(e)}") from e
+        raise HTTPException(status_code=500, detail=f"Internal error during analysis: {e!s}") from e
 
 
 @router.post(
@@ -451,7 +451,7 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
     """,
 )
 async def analyze_ipo_from_upload(
-    file: UploadFile = File(..., description="JSON file containing IPO analysis data"),
+    file: UploadFile = File(...),
 ) -> FullIPOAnalysisResponse:
     """
     Run full IPO analysis from an uploaded file.
@@ -481,13 +481,13 @@ async def analyze_ipo_from_upload(
         try:
             data = json.loads(contents.decode("utf-8"))
         except json.JSONDecodeError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid JSON format: {str(e)}") from e
+            raise HTTPException(status_code=400, detail=f"Invalid JSON format: {e!s}") from e
 
         # Validate against schema
         try:
             request = FullIPOAnalysisRequest.model_validate(data)
         except ValidationError as e:
-            raise HTTPException(status_code=422, detail=f"Schema validation failed: {str(e)}") from e
+            raise HTTPException(status_code=422, detail=f"Schema validation failed: {e!s}") from e
 
         # Execute workflow (reuse the analyze function logic)
         growth_data = request.growth_data.model_dump()
@@ -554,4 +554,4 @@ async def analyze_ipo_from_upload(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error processing file: {str(e)}") from e
+        raise HTTPException(status_code=500, detail=f"Internal error processing file: {e!s}") from e
