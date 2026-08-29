@@ -9,6 +9,9 @@ pydantic-settings==2.1.0
 # ASGI Server
 uvicorn[standard]==0.27.0
 
+# MCP Server SDK
+mcp[cli]>=1.0.0,<2.0.0
+
 # Data Processing
 numpy==1.26.3
 pandas==2.1.4

@@ -15,6 +15,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.mcp_server import create_mcp_sse_app
 from backend.routes.ipo import router as ipo_router
 from backend.schemas import ErrorResponse
 
@@ -46,6 +47,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     from arthaprama.ipo import growth, risk, valuation, scoring
 
     logger.info("All modules loaded successfully.")
+    logger.info("MCP SSE transport available at /sse")
     logger.info("Arthaprama API is ready to accept requests.")
 
     yield
@@ -169,6 +171,9 @@ explicit "BUY"/"SELL" recommendations.
     async def health_check() -> dict[str, str]:
         """Health check endpoint."""
         return {"status": "healthy"}
+
+    # Mount MCP SSE transport under /sse using the MCP app's native route map.
+    app.mount("/", create_mcp_sse_app())
 
     return app
 
