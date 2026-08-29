@@ -42,7 +42,8 @@ class TestCalculateIpoGrowth:
         )
         
         assert result["success"] is True
-        assert "profit_cagr_3yr" in result["metrics"]
+        # Domain function returns pat_cagr_3yr and profit_growth_yoy
+        assert "pat_cagr_3yr" in result["metrics"] or "profit_cagr_3yr" in result["metrics"]
         assert "profit_growth_yoy" in result["metrics"]
         
     def test_growth_with_industry_comparison(self) -> None:
@@ -319,7 +320,7 @@ class TestGenerateCompositeIpoScore:
         
     def test_composite_score_different_profiles(self) -> None:
         """Test composite score with different investor profiles."""
-        profiles = ["balanced", "conservative", "aggressive", "deep_value"]
+        profiles = ["balanced", "conservative", "aggressive_growth", "deep_value"]
         
         for profile in profiles:
             result = generate_composite_ipo_score(

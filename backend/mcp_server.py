@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 # Initialize MCP server
 mcp_server = FastMCP(
     name="Arthaprama IPO Intelligence Engine",
-    description="Comprehensive IPO analysis engine providing growth, risk, valuation, and composite scoring tools for Indian IPOs.",
+    instructions="Comprehensive IPO analysis engine providing growth, risk, valuation, and composite scoring tools for Indian IPOs.",
 )
 
 
@@ -98,7 +98,7 @@ def calculate_ipo_growth(
     """
     # Validate minimum data requirements
     if len(revenues) < 2:
-        raise ValueError("At least 2 revenue data points are required")
+        return {"success": False, "error": "At least 2 revenue data points are required"}
 
     # Prepare input data for the core function
     growth_data: dict[str, Any] = {"revenues": revenues}
@@ -126,9 +126,11 @@ def calculate_ipo_growth(
             )
 
         if industry_avg_margin is not None:
-            if "avg_ebitda_margin" in metrics_float:
+            # Check for ebitda_margin (the actual key returned by domain function)
+            margin_key = "ebitda_margin" if "ebitda_margin" in metrics_float else "avg_ebitda_margin"
+            if margin_key in metrics_float:
                 metrics_float["vs_industry_margin"] = (
-                    metrics_float["avg_ebitda_margin"] - industry_avg_margin
+                    metrics_float[margin_key] - industry_avg_margin
                 )
 
         return {"success": True, "metrics": metrics_float}
@@ -219,7 +221,7 @@ def evaluate_ipo_risk(
     """
     # Validate required parameters
     if total_debt < 0 or shareholders_equity <= 0 or ebitda < 0:
-        raise ValueError("Invalid financial parameters provided")
+        return {"success": False, "error": "Invalid financial parameters provided"}
 
     # Prepare input data for core risk function
     risk_data: dict[str, Any] = {
@@ -385,7 +387,7 @@ def model_ipo_valuation(
     """
     # Validate required parameters
     if ipo_price <= 0 or eps_pre_ipo <= 0 or book_value_per_share <= 0:
-        raise ValueError("Invalid valuation parameters provided")
+        return {"success": False, "error": "Invalid valuation parameters provided"}
 
     # Prepare input data for core valuation function
     valuation_data: dict[str, Any] = {
@@ -553,7 +555,7 @@ def generate_composite_ipo_score(
     """
     # Validate inputs
     if not growth_metrics or not risk_metrics or not valuation_metrics:
-        raise ValueError("Growth, risk, and valuation metrics are all required")
+        return {"success": False, "error": "Growth, risk, and valuation metrics are all required"}
 
     # Convert float metrics back to Decimal-compatible format for core function
     # The scoring engine expects specific metric names
@@ -708,7 +710,7 @@ def run_full_ipo_workflow(
     """
     # Validate required inputs
     if not company_name or not ipo_date or ipo_price <= 0:
-        raise ValueError("Company name, IPO date, and IPO price are required")
+        return {"success": False, "error": "Company name, IPO date, and IPO price are required"}
 
     required_financial_keys = [
         "revenues",
@@ -719,19 +721,72 @@ def run_full_ipo_workflow(
     ]
     for key in required_financial_keys:
         if key not in financials:
-            raise ValueError(f"Required financial data missing: {key}")
+            return {"success": False, "error": f"Required financial data missing: {key}"}
 
     try:
-        # Run the full IPO analysis workflow
+        # Run the full IPO analysis workflow using the domain function signature
         workflow_result = run_full_ipo_analysis(
-            company_name=company_name,
-            ipo_date=ipo_date,
-            ipo_price=ipo_price,
-            financials=financials,
-            industry_benchmarks=industry_benchmarks,
-            peer_multiples=peer_multiples,
-            ipo_specifics=ipo_specifics,
+            growth_data={
+                "revenue_current": financials.get("revenues", [])[-1] if financials.get("revenues") else 0,
+                "revenue_previous": financials.get("revenues", [])[-2] if len(financials.get("revenues", [])) > 1 else 0,
+                "revenue_3yrs_ago": financials.get("revenues", [0])[0],
+                "pat_current": financials.get("profits", [])[-1] if financials.get("profits") else 0,
+                "pat_previous": financials.get("profits", [])[-2] if len(financials.get("profits", [])) > 1 else 0,
+                "pat_3yrs_ago": financials.get("profits", [0])[0],
+                "ebitda_current": financials.get("ebitda", [])[-1] if financials.get("ebitda") else 0,
+                "ebitda_previous": financials.get("ebitda", [])[-2] if len(financials.get("ebitda", [])) > 1 else 0,
+                "eps_current": financials.get("eps", 0),
+                "eps_previous": 0,
+                "ebit": 0,
+                "cfo_current": 0,
+                "cfo_previous": 0,
+                "avg_shareholders_equity": financials.get("shareholders_equity", 0),
+                "capital_employed": 0,
+            },
+            risk_data={
+                "total_debt": financials.get("total_debt", 0),
+                "shareholders_equity": financials.get("shareholders_equity", 0),
+                "cash_equivalents": financials.get("cash_equivalents", 0),
+                "ebitda": financials.get("ebitda", [])[-1] if financials.get("ebitda") else 0,
+                "interest_expense": financials.get("interest_expense", 0),
+                "current_assets": financials.get("current_assets", 0),
+                "current_liabilities": financials.get("current_liabilities", 0),
+                "inventory": 0,
+                "cfo": 0,
+                "pat": financials.get("profits", [])[-1] if financials.get("profits") else 0,
+                "capex": 0,
+                "largest_customer_rev": 0,
+                "total_rev": financials.get("revenues", [])[-1] if financials.get("revenues") else 0,
+                "pledged_shares": 0,
+                "total_promoter_shares": 0,
+                "contingent_liabilities": 0,
+                "net_worth": financials.get("shareholders_equity", 0),
+            },
+            valuation_data={
+                "market_cap": 0,
+                "pat": financials.get("profits", [])[-1] if financials.get("profits") else 0,
+                "book_value": financials.get("shareholders_equity", 0),
+                "revenue": financials.get("revenues", [])[-1] if financials.get("revenues") else 0,
+                "ebitda": financials.get("ebitda", [])[-1] if financials.get("ebitda") else 0,
+                "eps": financials.get("eps", 0),
+                "ipo_price": ipo_price,
+                "total_debt": financials.get("total_debt", 0),
+                "cash_equivalents": financials.get("cash_equivalents", 0),
+                "free_cash_flow": 0,
+                "new_shares": 0,
+                "post_ipo_shares": 0,
+                "post_ipo_diluted_shares": 0,
+                "post_ipo_pat": financials.get("profits", [])[-1] if financials.get("profits") else 0,
+                "expected_eps_growth_pct": 0,
+            },
+            ipo_data={
+                "ipo_dilution": ipo_specifics.get("dilution_pct", 0) if ipo_specifics else 0,
+                "promoter_holding_post_ipo": ipo_specifics.get("promoter_holding_post", 0) if ipo_specifics else 0,
+                "promoter_pledge_ratio": 0,
+            },
             profile=profile,
+            peer_data=peer_multiples,
+            precision=4,
         )
 
         # Convert workflow result to dictionary
