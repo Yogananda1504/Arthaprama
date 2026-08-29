@@ -180,7 +180,7 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
 
 @router.get(
     "/scores/breakdown",
-    response_model=ScoreBreakdownResponse,
+    response_model=dict[str, Any],
     summary="Get scoring breakdown explanation",
     description="Returns detailed explanation of how scores are calculated across all pillars.",
 )
