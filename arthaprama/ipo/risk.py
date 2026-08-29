@@ -42,9 +42,7 @@ def _to_decimal(value: Any) -> Decimal:
         raise RiskCalculationError(f"Cannot convert '{value}' to Decimal") from e
 
 
-def debt_to_equity(
-    total_debt: Any, shareholders_equity: Any, precision: int = 4
-) -> Decimal:
+def debt_to_equity(total_debt: Any, shareholders_equity: Any, precision: int = 4) -> Decimal:
     """
     Calculate Debt-to-Equity Ratio.
 
@@ -106,9 +104,7 @@ def net_debt(total_debt: Any, cash_equivalents: Any, precision: int = 4) -> Deci
     return net.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def net_debt_to_ebitda(
-    net_debt_value: Any, ebitda: Any, precision: int = 4
-) -> Decimal:
+def net_debt_to_ebitda(net_debt_value: Any, ebitda: Any, precision: int = 4) -> Decimal:
     """
     Calculate Net Debt to EBITDA Ratio.
 
@@ -142,9 +138,7 @@ def net_debt_to_ebitda(
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def interest_coverage(
-    ebit: Any, interest_expense: Any, precision: int = 4
-) -> Decimal:
+def interest_coverage(ebit: Any, interest_expense: Any, precision: int = 4) -> Decimal:
     """
     Calculate Interest Coverage Ratio.
 
@@ -178,9 +172,7 @@ def interest_coverage(
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def current_ratio(
-    current_assets: Any, current_liabilities: Any, precision: int = 4
-) -> Decimal:
+def current_ratio(current_assets: Any, current_liabilities: Any, precision: int = 4) -> Decimal:
     """
     Calculate Current Ratio.
 
@@ -386,9 +378,7 @@ def fcf_to_pat(fcf: Any, pat: Any, precision: int = 4) -> Decimal:
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def customer_concentration(
-    largest_customer_rev: Any, total_rev: Any, precision: int = 4
-) -> Decimal:
+def customer_concentration(largest_customer_rev: Any, total_rev: Any, precision: int = 4) -> Decimal:
     """
     Calculate Customer Concentration Ratio.
 
@@ -422,9 +412,7 @@ def customer_concentration(
     return concentration.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def promoter_pledge_ratio(
-    pledged_shares: Any, total_promoter_shares: Any, precision: int = 4
-) -> Decimal:
+def promoter_pledge_ratio(pledged_shares: Any, total_promoter_shares: Any, precision: int = 4) -> Decimal:
     """
     Calculate Promoter Pledge Ratio.
 
@@ -458,9 +446,7 @@ def promoter_pledge_ratio(
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def contingent_liabilities_to_nw(
-    contingent_libs: Any, net_worth: Any, precision: int = 4
-) -> Decimal:
+def contingent_liabilities_to_nw(contingent_libs: Any, net_worth: Any, precision: int = 4) -> Decimal:
     """
     Calculate Contingent Liabilities to Net Worth Ratio.
 
@@ -494,9 +480,7 @@ def contingent_liabilities_to_nw(
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def calculate_all_risk_metrics(
-    financial_data: dict[str, Any], precision: int = 4
-) -> dict[str, Decimal]:
+def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 4) -> dict[str, Decimal]:
     """
     Calculate all risk metrics from a comprehensive financial data dictionary.
 

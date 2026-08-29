@@ -82,9 +82,7 @@ class FullIPOAnalysisResult:
 
     growth_analysis: GrowthAnalysisResult = field(default_factory=GrowthAnalysisResult)
     risk_analysis: RiskAnalysisResult = field(default_factory=RiskAnalysisResult)
-    valuation_analysis: ValuationAnalysisResult = field(
-        default_factory=ValuationAnalysisResult
-    )
+    valuation_analysis: ValuationAnalysisResult = field(default_factory=ValuationAnalysisResult)
     composite_score: ScoreBreakdown | None = None
     errors: list[str] = field(default_factory=list)
     success: bool = True
@@ -95,9 +93,7 @@ class FullIPOAnalysisResult:
             "growth_analysis": self.growth_analysis.to_dict(),
             "risk_analysis": self.risk_analysis.to_dict(),
             "valuation_analysis": self.valuation_analysis.to_dict(),
-            "composite_score": (
-                self.composite_score.to_dict() if self.composite_score else None
-            ),
+            "composite_score": (self.composite_score.to_dict() if self.composite_score else None),
             "errors": self.errors,
             "success": self.success,
         }
@@ -237,9 +233,7 @@ def run_full_ipo_analysis(
 
     # Step 3: Calculate Valuation Metrics
     try:
-        valuation_metrics = calculate_all_valuation_metrics(
-            valuation_data, peer_data, precision
-        )
+        valuation_metrics = calculate_all_valuation_metrics(valuation_data, peer_data, precision)
         result.valuation_analysis = ValuationAnalysisResult(
             metrics=valuation_metrics,
             errors=[],
@@ -278,11 +272,7 @@ def run_full_ipo_analysis(
         result.composite_score = None
 
     # Determine overall success
-    result.success = (
-        result.growth_analysis.success
-        and result.risk_analysis.success
-        and result.valuation_analysis.success
-    )
+    result.success = result.growth_analysis.success and result.risk_analysis.success and result.valuation_analysis.success
 
     return result
 
@@ -299,9 +289,7 @@ class IPOWorkflowEngine:
         strict_mode: If True, raises exceptions on errors; if False, returns partial results.
     """
 
-    def __init__(
-        self, precision: int = 4, strict_mode: bool = False
-    ) -> None:
+    def __init__(self, precision: int = 4, strict_mode: bool = False) -> None:
         """
         Initialize the IPO Workflow Engine.
 
@@ -349,9 +337,7 @@ class IPOWorkflowEngine:
         )
 
         if self.strict_mode and not result.success:
-            raise IPOWorkflowError(
-                f"Workflow execution failed with errors: {', '.join(result.errors)}"
-            )
+            raise IPOWorkflowError(f"Workflow execution failed with errors: {', '.join(result.errors)}")
 
         return result
 
@@ -377,7 +363,12 @@ class IPOWorkflowEngine:
         errors: list[str] = []
 
         # Validate required growth fields
-        required_growth = ["revenue_current", "revenue_previous", "pat_current", "pat_previous"]
+        required_growth = [
+            "revenue_current",
+            "revenue_previous",
+            "pat_current",
+            "pat_previous",
+        ]
         for field_name in required_growth:
             if field_name not in growth_data:
                 errors.append(f"Missing required growth field: {field_name}")

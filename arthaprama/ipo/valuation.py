@@ -48,7 +48,11 @@ def _to_decimal(value: Any) -> Decimal:
 
 
 def pe_ratio(
-    market_cap: Any | None = None, pat: Any | None = None, ipo_price: Any | None = None, eps: Any | None = None, precision: int = 4
+    market_cap: Any | None = None,
+    pat: Any | None = None,
+    ipo_price: Any | None = None,
+    eps: Any | None = None,
+    precision: int = 4,
 ) -> Decimal:
     """
     Calculate Price-to-Earnings (P/E) Ratio.
@@ -90,9 +94,7 @@ def pe_ratio(
             raise ValuationCalculationError("EPS cannot be zero")
         ratio = price / earnings
     else:
-        raise ValuationCalculationError(
-            "Must provide either (market_cap, pat) or (ipo_price, eps)"
-        )
+        raise ValuationCalculationError("Must provide either (market_cap, pat) or (ipo_price, eps)")
 
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
@@ -332,9 +334,7 @@ def price_to_fcf(market_cap: Any, free_cash_flow: Any, precision: int = 4) -> De
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def enterprise_value(
-    market_cap: Any, total_debt: Any, cash: Any, precision: int = 4
-) -> Decimal:
+def enterprise_value(market_cap: Any, total_debt: Any, cash: Any, precision: int = 4) -> Decimal:
     """
     Calculate Enterprise Value (EV).
 
@@ -369,9 +369,7 @@ def enterprise_value(
 # =============================================================================
 
 
-def pe_premium_vs_peer(
-    ipo_pe: Any, peer_median_pe: Any, precision: int = 4
-) -> Decimal:
+def pe_premium_vs_peer(ipo_pe: Any, peer_median_pe: Any, precision: int = 4) -> Decimal:
     """
     Calculate P/E Premium/Discount vs Peer Median.
 
@@ -405,9 +403,7 @@ def pe_premium_vs_peer(
     return premium.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def ev_ebitda_premium_vs_peer(
-    ipo_ev_ebitda: Any, peer_median: Any, precision: int = 4
-) -> Decimal:
+def ev_ebitda_premium_vs_peer(ipo_ev_ebitda: Any, peer_median: Any, precision: int = 4) -> Decimal:
     """
     Calculate EV/EBITDA Premium/Discount vs Peer Median.
 
@@ -480,9 +476,7 @@ def ipo_dilution(new_shares: Any, post_ipo_shares: Any, precision: int = 4) -> D
     return dilution.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def post_ipo_eps(
-    post_ipo_pat: Any, post_ipo_diluted_shares: Any, precision: int = 4
-) -> Decimal:
+def post_ipo_eps(post_ipo_pat: Any, post_ipo_diluted_shares: Any, precision: int = 4) -> Decimal:
     """
     Calculate Post-IPO Earnings Per Share.
 

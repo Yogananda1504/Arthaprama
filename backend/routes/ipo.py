@@ -65,13 +65,13 @@ router = APIRouter(prefix="/api/v1/ipo", tags=["IPO Analysis"])
 async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
     """
     Evaluate an IPO using the 100-point scoring matrix.
-    
+
     Args:
         request: IPO evaluation request containing all financial data.
-        
+
     Returns:
         Comprehensive evaluation response with scores and metrics.
-        
+
     Raises:
         HTTPException: If evaluation fails due to invalid data.
     """
@@ -81,12 +81,12 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
         risk_data = request.risk_data.model_dump()
         valuation_data = request.valuation_data.model_dump()
         ipo_data = request.ipo_data.model_dump()
-        
+
         # Convert peer data if provided
         peer_data = None
         if request.peer_data:
             peer_data = request.peer_data.model_dump()
-        
+
         # Generate score using the scoring engine
         score_result = generate_ipo_score(
             growth_data=growth_data,
@@ -96,12 +96,12 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             profile=request.profile,
             peer_data=peer_data,
         )
-        
+
         # Calculate individual metrics for response
         growth_metrics_dict = calculate_all_growth_metrics(growth_data)
         risk_metrics_dict = calculate_all_risk_metrics(risk_data)
         valuation_metrics_dict = calculate_all_valuation_metrics(valuation_data, peer_data)
-        
+
         # Build response objects
         score_breakdown = ScoreBreakdownResponse(
             growth_score=float(score_result.growth_score),
@@ -114,7 +114,7 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             valuation_details=score_result.valuation_details,
             ipo_quality_details=score_result.ipo_quality_details,
         )
-        
+
         growth_metrics = GrowthMetricsResponse(
             revenue_growth_yoy=float(growth_metrics_dict.get("revenue_growth_yoy", 0)),
             profit_growth_yoy=float(growth_metrics_dict.get("profit_growth_yoy", 0)),
@@ -128,7 +128,7 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             roce=float(growth_metrics_dict.get("roce", 0)),
             cfo_growth=float(growth_metrics_dict.get("cfo_growth", 0)),
         )
-        
+
         risk_metrics = RiskMetricsResponse(
             debt_to_equity=float(risk_metrics_dict.get("debt_to_equity", 0)),
             net_debt=float(risk_metrics_dict.get("net_debt", 0)),
@@ -142,11 +142,9 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             fcf_to_pat=float(risk_metrics_dict.get("fcf_to_pat", 0)),
             customer_concentration=float(risk_metrics_dict.get("customer_concentration", 0)),
             promoter_pledge_ratio=float(risk_metrics_dict.get("promoter_pledge_ratio", 0)),
-            contingent_liabilities_to_nw=float(
-                risk_metrics_dict.get("contingent_liabilities_to_nw", 0)
-            ),
+            contingent_liabilities_to_nw=float(risk_metrics_dict.get("contingent_liabilities_to_nw", 0)),
         )
-        
+
         valuation_metrics = ValuationMetricsResponse(
             pe_ratio=float(valuation_metrics_dict.get("pe_ratio", 0)),
             pb_ratio=float(valuation_metrics_dict.get("pb_ratio", 0)),
@@ -158,13 +156,11 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             price_to_fcf=float(valuation_metrics_dict.get("price_to_fcf", 0)),
             enterprise_value=float(valuation_metrics_dict.get("enterprise_value", 0)),
             pe_premium_vs_peer=float(valuation_metrics_dict.get("pe_premium_vs_peer", 0)),
-            ev_ebitda_premium_vs_peer=float(
-                valuation_metrics_dict.get("ev_ebitda_premium_vs_peer", 0)
-            ),
+            ev_ebitda_premium_vs_peer=float(valuation_metrics_dict.get("ev_ebitda_premium_vs_peer", 0)),
             ipo_dilution=float(valuation_metrics_dict.get("ipo_dilution", 0)),
             post_ipo_eps=float(valuation_metrics_dict.get("post_ipo_eps", 0)),
         )
-        
+
         return IPOEvaluationResponse(
             company_name=request.company_name,
             sector=request.sector,
@@ -175,25 +171,23 @@ async def evaluate_ipo(request: IPOEvaluationRequest) -> IPOEvaluationResponse:
             risk_metrics=risk_metrics,
             valuation_metrics=valuation_metrics,
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Internal error during evaluation: {str(e)}"
-        ) from e
+        raise HTTPException(status_code=500, detail=f"Internal error during evaluation: {str(e)}") from e
 
 
 @router.get(
     "/scores/breakdown",
-    response_model=ScoreBreakdownResponse,
+    response_model=dict[str, Any],
     summary="Get scoring breakdown explanation",
     description="Returns detailed explanation of how scores are calculated across all pillars.",
 )
 async def get_scoring_breakdown() -> dict[str, Any]:
     """
     Get detailed explanation of the scoring methodology.
-    
+
     Returns:
         Dictionary explaining scoring weights and methodology.
     """
@@ -264,7 +258,7 @@ async def get_scoring_breakdown() -> dict[str, Any]:
 async def get_profiles() -> dict[str, Any]:
     """
     Get all available investor profile configurations.
-    
+
     Returns:
         Dictionary of profile names to their weight configurations.
     """
@@ -288,13 +282,13 @@ async def get_profiles() -> dict[str, Any]:
 async def get_profile_detail(profile_name: str) -> dict[str, Any]:
     """
     Get detailed configuration for a specific investor profile.
-    
+
     Args:
         profile_name: Name of the profile (balanced, conservative, aggressive_growth, deep_value).
-        
+
     Returns:
         Profile configuration dictionary.
-        
+
     Raises:
         HTTPException: If profile name is invalid.
     """
@@ -341,13 +335,13 @@ async def get_profile_detail(profile_name: str) -> dict[str, Any]:
 async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisResponse:
     """
     Run full IPO analysis workflow.
-    
+
     Args:
         request: Full IPO analysis request containing all financial data.
-        
+
     Returns:
         Comprehensive analysis response with all metrics and composite score.
-        
+
     Raises:
         HTTPException: If analysis fails due to invalid data.
     """
@@ -357,12 +351,12 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
         risk_data = request.risk_data.model_dump()
         valuation_data = request.valuation_data.model_dump()
         ipo_data = request.ipo_data.model_dump()
-        
+
         # Convert peer data if provided
         peer_data = None
         if request.peer_data:
             peer_data = request.peer_data.model_dump()
-        
+
         # Execute workflow engine
         workflow = IPOWorkflowEngine()
         result = workflow.execute(
@@ -373,26 +367,26 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
             profile=request.profile,
             peer_data=peer_data,
         )
-        
+
         # Build response
         growth_analysis = GrowthAnalysisResponse(
             metrics=result.growth_analysis.to_dict()["metrics"],
             errors=result.growth_analysis.errors,
             success=result.growth_analysis.success,
         )
-        
+
         risk_analysis = RiskAnalysisResponse(
             metrics=result.risk_analysis.to_dict()["metrics"],
             errors=result.risk_analysis.errors,
             success=result.risk_analysis.success,
         )
-        
+
         valuation_analysis = ValuationAnalysisResponse(
             metrics=result.valuation_analysis.to_dict()["metrics"],
             errors=result.valuation_analysis.errors,
             success=result.valuation_analysis.success,
         )
-        
+
         composite_score = None
         if result.composite_score:
             composite_score = ScoreBreakdownResponse(
@@ -406,7 +400,7 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
                 valuation_details=result.composite_score.valuation_details,
                 ipo_quality_details=result.composite_score.ipo_quality_details,
             )
-        
+
         return FullIPOAnalysisResponse(
             growth_analysis=growth_analysis,
             risk_analysis=risk_analysis,
@@ -415,15 +409,13 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
             errors=result.errors,
             success=result.success,
         )
-        
+
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=f"Validation error: {str(e)}") from e
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Internal error during analysis: {str(e)}"
-        ) from e
+        raise HTTPException(status_code=500, detail=f"Internal error during analysis: {str(e)}") from e
 
 
 @router.post(
@@ -463,13 +455,13 @@ async def analyze_ipo_from_upload(
 ) -> FullIPOAnalysisResponse:
     """
     Run full IPO analysis from an uploaded file.
-    
+
     Args:
         file: Uploaded JSON file containing IPO data.
-        
+
     Returns:
         Comprehensive analysis response with all metrics and composite score.
-        
+
     Raises:
         HTTPException: If file parsing or analysis fails.
     """
@@ -477,40 +469,36 @@ async def analyze_ipo_from_upload(
         # Validate file extension
         if not file.filename:
             raise HTTPException(status_code=400, detail="No filename provided")
-        
+
         if not file.filename.lower().endswith(".json"):
             raise HTTPException(
                 status_code=400,
                 detail=f"Unsupported file format '{file.filename}'. Only .json files are supported.",
             )
-        
+
         # Read and parse file content
         contents = await file.read()
         try:
             data = json.loads(contents.decode("utf-8"))
         except json.JSONDecodeError as e:
-            raise HTTPException(
-                status_code=400, detail=f"Invalid JSON format: {str(e)}"
-            ) from e
-        
+            raise HTTPException(status_code=400, detail=f"Invalid JSON format: {str(e)}") from e
+
         # Validate against schema
         try:
             request = FullIPOAnalysisRequest.model_validate(data)
         except ValidationError as e:
-            raise HTTPException(
-                status_code=422, detail=f"Schema validation failed: {str(e)}"
-            ) from e
-        
+            raise HTTPException(status_code=422, detail=f"Schema validation failed: {str(e)}") from e
+
         # Execute workflow (reuse the analyze function logic)
         growth_data = request.growth_data.model_dump()
         risk_data = request.risk_data.model_dump()
         valuation_data = request.valuation_data.model_dump()
         ipo_data = request.ipo_data.model_dump()
-        
+
         peer_data = None
         if request.peer_data:
             peer_data = request.peer_data.model_dump()
-        
+
         workflow = IPOWorkflowEngine()
         result = workflow.execute(
             growth_data=growth_data,
@@ -520,26 +508,26 @@ async def analyze_ipo_from_upload(
             profile=request.profile,
             peer_data=peer_data,
         )
-        
+
         # Build response
         growth_analysis = GrowthAnalysisResponse(
             metrics=result.growth_analysis.to_dict()["metrics"],
             errors=result.growth_analysis.errors,
             success=result.growth_analysis.success,
         )
-        
+
         risk_analysis = RiskAnalysisResponse(
             metrics=result.risk_analysis.to_dict()["metrics"],
             errors=result.risk_analysis.errors,
             success=result.risk_analysis.success,
         )
-        
+
         valuation_analysis = ValuationAnalysisResponse(
             metrics=result.valuation_analysis.to_dict()["metrics"],
             errors=result.valuation_analysis.errors,
             success=result.valuation_analysis.success,
         )
-        
+
         composite_score = None
         if result.composite_score:
             composite_score = ScoreBreakdownResponse(
@@ -553,7 +541,7 @@ async def analyze_ipo_from_upload(
                 valuation_details=result.composite_score.valuation_details,
                 ipo_quality_details=result.composite_score.ipo_quality_details,
             )
-        
+
         return FullIPOAnalysisResponse(
             growth_analysis=growth_analysis,
             risk_analysis=risk_analysis,
@@ -562,10 +550,8 @@ async def analyze_ipo_from_upload(
             errors=result.errors,
             success=result.success,
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Internal error processing file: {str(e)}"
-        ) from e
+        raise HTTPException(status_code=500, detail=f"Internal error processing file: {str(e)}") from e
