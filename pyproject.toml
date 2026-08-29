@@ -103,13 +103,13 @@ per-file-ignores = ["__init__.py:F401"]
 line-length = 127
 target-version = ['py310', 'py311', 'py312']
 include = '\.pyi?$'
-exclude = '''
+force-exclude = '''
 /(
-    \\.git
-  | \\.hg
-  | \\.mypy_cache
-  | \\.tox
-  | \\.venv
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
   | _build
   | buck-out
   | build

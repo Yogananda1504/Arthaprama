@@ -19,7 +19,6 @@ class ValuationCalculationError(Exception):
     """Exception raised when valuation calculations encounter invalid inputs."""
 
 
-
 def _to_decimal(value: Any) -> Decimal:
     """
     Safely convert a value to Decimal for precise arithmetic.

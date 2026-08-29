@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Import core modules to verify they load correctly
 
     logger.info("All modules loaded successfully.")
-    
+
     # Initialize MCP SSE transport
     logger.info("Initializing MCP SSE transport...")
     try:
@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.info("MCP SSE transport mounted successfully at /sse endpoint")
     except Exception:  # noqa: BLE001
         logger.warning("MCP SSE initialization skipped (may not be required)")
-    
+
     logger.info("Arthaprama API is ready to accept requests.")
 
     yield

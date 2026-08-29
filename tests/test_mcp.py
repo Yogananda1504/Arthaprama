@@ -25,24 +25,24 @@ class TestCalculateIpoGrowth:
         result = calculate_ipo_growth(
             revenues=[100, 120, 150, 180],
         )
-        
+
         assert result["success"] is True
         assert "metrics" in result
         assert "revenue_cagr_3yr" in result["metrics"]
         assert "revenue_growth_yoy" in result["metrics"]
-        
+
     def test_growth_with_profits(self) -> None:
         """Test growth calculation with profit data."""
         result = calculate_ipo_growth(
             revenues=[100, 120, 150, 180],
             profits=[10, 15, 20, 25],
         )
-        
+
         assert result["success"] is True
         # Domain function returns pat_cagr_3yr and profit_growth_yoy
         assert "pat_cagr_3yr" in result["metrics"] or "profit_cagr_3yr" in result["metrics"]
         assert "profit_growth_yoy" in result["metrics"]
-        
+
     def test_growth_with_industry_comparison(self) -> None:
         """Test growth calculation with industry benchmarks."""
         result = calculate_ipo_growth(
@@ -51,20 +51,20 @@ class TestCalculateIpoGrowth:
             industry_avg_growth=15.0,
             industry_avg_margin=20.0,
         )
-        
+
         assert result["success"] is True
         assert "vs_industry_growth" in result["metrics"]
         assert "vs_industry_margin" in result["metrics"]
-        
+
     def test_growth_insufficient_data(self) -> None:
         """Test that insufficient data raises appropriate error."""
         result = calculate_ipo_growth(
             revenues=[100],  # Only one data point
         )
-        
+
         assert result["success"] is False
         assert "error" in result
-        
+
     def test_growth_invokes_domain_function(self) -> None:
         """Verify that the tool invokes the core domain function."""
         # This test ensures domain isolation - the MCP tool should call
@@ -75,7 +75,7 @@ class TestCalculateIpoGrowth:
             equity=[200, 220, 250],
             assets=[400, 450, 500],
         )
-        
+
         assert result["success"] is True
         # Verify comprehensive metrics are calculated by domain function
         assert "roe" in result["metrics"] or "roce" in result["metrics"]
@@ -95,14 +95,14 @@ class TestEvaluateIpoRisk:
             current_assets=300,
             current_liabilities=200,
         )
-        
+
         assert result["success"] is True
         assert "metrics" in result
         assert "debt_to_equity" in result["metrics"]
         assert "current_ratio" in result["metrics"]
         assert "risk_matrix" in result
         assert "risk_assessment" in result
-        
+
     def test_risk_with_promoter_data(self) -> None:
         """Test risk evaluation with promoter holding and pledge data."""
         result = evaluate_ipo_risk(
@@ -116,10 +116,10 @@ class TestEvaluateIpoRisk:
             promoter_holding=60.0,
             promoter_pledge=30.0,
         )
-        
+
         assert result["success"] is True
         assert "promoter_pledge_ratio" in result["metrics"]
-        
+
     def test_risk_with_customer_concentration(self) -> None:
         """Test risk evaluation with customer concentration data."""
         result = evaluate_ipo_risk(
@@ -132,10 +132,10 @@ class TestEvaluateIpoRisk:
             current_liabilities=200,
             top_customer_revenue_pct=45.0,
         )
-        
+
         assert result["success"] is True
         assert "customer_concentration" in result["metrics"]
-        
+
     def test_risk_invalid_parameters(self) -> None:
         """Test that invalid parameters raise appropriate error."""
         result = evaluate_ipo_risk(
@@ -147,10 +147,10 @@ class TestEvaluateIpoRisk:
             current_assets=300,
             current_liabilities=200,
         )
-        
+
         assert result["success"] is False
         assert "error" in result
-        
+
     def test_risk_invokes_domain_function(self) -> None:
         """Verify that the tool invokes the core domain function."""
         result = evaluate_ipo_risk(
@@ -164,7 +164,7 @@ class TestEvaluateIpoRisk:
             operating_cash_flow=180,
             net_profit=150,
         )
-        
+
         assert result["success"] is True
         # Verify comprehensive risk metrics from domain function
         assert "net_debt_to_ebitda" in result["metrics"]
@@ -183,11 +183,11 @@ class TestModelIpoValuation:
             book_value_per_share=200,
             sales_per_share=100,
         )
-        
+
         assert result["success"] is True
         assert "metrics" in result
         assert "pe_ratio" in result["metrics"] or "implied_pe" in result.get("metrics", {})
-        
+
     def test_valuation_with_peer_comparison(self) -> None:
         """Test valuation with peer multiples for comparison."""
         result = model_ipo_valuation(
@@ -198,12 +198,12 @@ class TestModelIpoValuation:
             peer_pe_multiples=[18, 20, 22],
             peer_pb_multiples=[2.5, 3.0, 3.5],
         )
-        
+
         assert result["success"] is True
         assert "peer_comparison" in result
         assert "peer_avg_pe" in result["peer_comparison"]
         assert "pe_premium_to_peers" in result["peer_comparison"]
-        
+
     def test_valuation_with_ev_ebitda(self) -> None:
         """Test valuation with EV/EBITDA calculation."""
         result = model_ipo_valuation(
@@ -215,10 +215,10 @@ class TestModelIpoValuation:
             ebitda=400,
             peer_ev_ebitda_multiples=[10, 12, 14],
         )
-        
+
         assert result["success"] is True
         assert "ev_to_ebitda" in result["metrics"]
-        
+
     def test_valuation_invalid_parameters(self) -> None:
         """Test that invalid parameters raise appropriate error."""
         result = model_ipo_valuation(
@@ -227,10 +227,10 @@ class TestModelIpoValuation:
             book_value_per_share=200,
             sales_per_share=100,
         )
-        
+
         assert result["success"] is False
         assert "error" in result
-        
+
     def test_valuation_invokes_domain_function(self) -> None:
         """Verify that the tool invokes the core domain function."""
         result = model_ipo_valuation(
@@ -239,7 +239,7 @@ class TestModelIpoValuation:
             book_value_per_share=200,
             sales_per_share=100,
         )
-        
+
         assert result["success"] is True
         # Verify valuation metrics from domain function
         assert "pb_ratio" in result["metrics"] or "ps_ratio" in result["metrics"]
@@ -272,12 +272,12 @@ class TestGenerateCompositeIpoScore:
             },
             profile="balanced",
         )
-        
+
         assert result["success"] is True
         assert "total_score" in result
         assert "rating_tier" in result
         assert "recommendation" in result
-        
+
     def test_composite_score_with_ipo_quality(self) -> None:
         """Test composite score with IPO quality inputs."""
         result = generate_composite_ipo_score(
@@ -300,10 +300,10 @@ class TestGenerateCompositeIpoScore:
             },
             profile="conservative",
         )
-        
+
         assert result["success"] is True
         assert "total_score" in result
-        
+
     def test_composite_score_missing_metrics(self) -> None:
         """Test that missing metrics raise appropriate error."""
         result = generate_composite_ipo_score(
@@ -311,14 +311,14 @@ class TestGenerateCompositeIpoScore:
             risk_metrics={"debt_to_equity": 0.5},
             valuation_metrics={"pe_ratio": 18.0},
         )
-        
+
         assert result["success"] is False
         assert "error" in result
-        
+
     def test_composite_score_different_profiles(self) -> None:
         """Test composite score with different investor profiles."""
         profiles = ["balanced", "conservative", "aggressive_growth", "deep_value"]
-        
+
         for profile in profiles:
             result = generate_composite_ipo_score(
                 growth_metrics={
@@ -335,7 +335,7 @@ class TestGenerateCompositeIpoScore:
                 },
                 profile=profile,
             )
-            
+
             assert result["success"] is True
             assert "rating_tier" in result
 
@@ -365,7 +365,7 @@ class TestRunFullIpoWorkflow:
             },
             profile="balanced",
         )
-        
+
         assert result["success"] is True
         assert "growth_analysis" in result
         assert "risk_analysis" in result
@@ -373,7 +373,7 @@ class TestRunFullIpoWorkflow:
         assert "composite_score" in result
         assert "rating_tier" in result
         assert "executive_summary" in result
-        
+
     def test_full_workflow_with_peer_comparison(self) -> None:
         """Test full workflow with peer multiples."""
         result = run_full_ipo_workflow(
@@ -400,9 +400,9 @@ class TestRunFullIpoWorkflow:
             },
             profile="balanced",
         )
-        
+
         assert result["success"] is True
-        
+
     def test_full_workflow_with_industry_benchmarks(self) -> None:
         """Test full workflow with industry benchmarks."""
         result = run_full_ipo_workflow(
@@ -430,9 +430,9 @@ class TestRunFullIpoWorkflow:
             },
             profile="balanced",
         )
-        
+
         assert result["success"] is True
-        
+
     def test_full_workflow_missing_required_data(self) -> None:
         """Test that missing required data raises appropriate error."""
         result = run_full_ipo_workflow(
@@ -445,10 +445,10 @@ class TestRunFullIpoWorkflow:
             },
             profile="balanced",
         )
-        
+
         assert result["success"] is False
         assert "error" in result
-        
+
     def test_full_workflow_invokes_domain_functions(self) -> None:
         """Verify that the workflow invokes all core domain functions."""
         result = run_full_ipo_workflow(
@@ -471,7 +471,7 @@ class TestRunFullIpoWorkflow:
             },
             profile="balanced",
         )
-        
+
         if result["success"]:
             # Verify all domain analyses are present
             assert "growth_analysis" in result
@@ -487,19 +487,19 @@ class TestMcpServerIntegration:
     def test_mcp_server_initialization(self) -> None:
         """Test that MCP server initializes correctly."""
         from backend.mcp_server import mcp_server
-        
+
         assert mcp_server is not None
-        assert hasattr(mcp_server, 'name')
+        assert hasattr(mcp_server, "name")
         assert mcp_server.name == "Arthaprama IPO Intelligence Engine"
-        
+
     def test_all_tools_registered(self) -> None:
         """Test that all required tools are registered with MCP server."""
         from backend.mcp_server import mcp_server
-        
+
         # Get list of registered tools
         # Note: The exact API may vary depending on MCP SDK version
-        assert hasattr(mcp_server, '_tool_manager') or hasattr(mcp_server, 'tools')
-        
+        assert hasattr(mcp_server, "_tool_manager") or hasattr(mcp_server, "tools")
+
     def test_tool_docstrings_present(self) -> None:
         """Test that all tools have comprehensive docstrings."""
         tools = [
@@ -509,7 +509,7 @@ class TestMcpServerIntegration:
             generate_composite_ipo_score,
             run_full_ipo_workflow,
         ]
-        
+
         for tool in tools:
             assert tool.__doc__ is not None
             assert len(tool.__doc__) > 50  # Reasonable docstring length

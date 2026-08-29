@@ -51,7 +51,7 @@ jobs:
       - name: Run Linters
         run: |
           poetry run ruff check .
-          poetry run black --check .
+          poetry run black --check arthaprama backend tests
 
       - name: Run unit tests with coverage
         env:

@@ -121,17 +121,13 @@ def calculate_ipo_growth(
 
         # Add industry comparisons if provided
         if industry_avg_growth is not None and "revenue_cagr_3yr" in metrics_float:
-            metrics_float["vs_industry_growth"] = (
-                metrics_float["revenue_cagr_3yr"] - industry_avg_growth
-            )
+            metrics_float["vs_industry_growth"] = metrics_float["revenue_cagr_3yr"] - industry_avg_growth
 
         if industry_avg_margin is not None:
             # Check for ebitda_margin (the actual key returned by domain function)
             margin_key = "ebitda_margin" if "ebitda_margin" in metrics_float else "avg_ebitda_margin"
             if margin_key in metrics_float:
-                metrics_float["vs_industry_margin"] = (
-                    metrics_float[margin_key] - industry_avg_margin
-                )
+                metrics_float["vs_industry_margin"] = metrics_float[margin_key] - industry_avg_margin
 
         return {"success": True, "metrics": metrics_float}
 
@@ -257,12 +253,21 @@ def evaluate_ipo_risk(
 
         # Build risk matrix
         risk_matrix = {
-            "leverage_risk": "High" if metrics_float.get("debt_to_equity", 0) > 2.0 else 
-                            "Medium" if metrics_float.get("debt_to_equity", 0) > 1.0 else "Low",
-            "liquidity_risk": "High" if metrics_float.get("current_ratio", 999) < 1.0 else
-                             "Medium" if metrics_float.get("current_ratio", 999) < 1.5 else "Low",
-            "governance_risk": "High" if metrics_float.get("promoter_pledge_ratio", 0) > 50 else
-                              "Medium" if metrics_float.get("promoter_pledge_ratio", 0) > 25 else "Low",
+            "leverage_risk": (
+                "High"
+                if metrics_float.get("debt_to_equity", 0) > 2.0
+                else "Medium" if metrics_float.get("debt_to_equity", 0) > 1.0 else "Low"
+            ),
+            "liquidity_risk": (
+                "High"
+                if metrics_float.get("current_ratio", 999) < 1.0
+                else "Medium" if metrics_float.get("current_ratio", 999) < 1.5 else "Low"
+            ),
+            "governance_risk": (
+                "High"
+                if metrics_float.get("promoter_pledge_ratio", 0) > 50
+                else "Medium" if metrics_float.get("promoter_pledge_ratio", 0) > 25 else "Low"
+            ),
         }
 
         # Calculate total risk penalty (simplified scoring)
@@ -408,17 +413,13 @@ def model_ipo_valuation(
             peer_avg_pe = sum(peer_pe_multiples) / len(peer_pe_multiples)
             peer_comparison["peer_avg_pe"] = peer_avg_pe
             if "pe_ratio" in metrics_float:
-                peer_comparison["pe_premium_to_peers"] = (
-                    (metrics_float["pe_ratio"] - peer_avg_pe) / peer_avg_pe * 100
-                )
+                peer_comparison["pe_premium_to_peers"] = (metrics_float["pe_ratio"] - peer_avg_pe) / peer_avg_pe * 100
 
         if peer_pb_multiples and len(peer_pb_multiples) > 0:
             peer_avg_pb = sum(peer_pb_multiples) / len(peer_pb_multiples)
             peer_comparison["peer_avg_pb"] = peer_avg_pb
             if "pb_ratio" in metrics_float:
-                peer_comparison["pb_premium_to_peers"] = (
-                    (metrics_float["pb_ratio"] - peer_avg_pb) / peer_avg_pb * 100
-                )
+                peer_comparison["pb_premium_to_peers"] = (metrics_float["pb_ratio"] - peer_avg_pb) / peer_avg_pb * 100
 
         if peer_ev_ebitda_multiples and len(peer_ev_ebitda_multiples) > 0:
             peer_avg_ev_ebitda = sum(peer_ev_ebitda_multiples) / len(peer_ev_ebitda_multiples)
@@ -434,27 +435,21 @@ def model_ipo_valuation(
             try:
                 # Simplified DCF calculation
                 terminal_value = (
-                    dcf_fcf_projections[-1] * (1 + dcf_terminal_growth) / 
-                    (dcf_discount_rate - dcf_terminal_growth)
+                    dcf_fcf_projections[-1] * (1 + dcf_terminal_growth) / (dcf_discount_rate - dcf_terminal_growth)
                 )
-                
+
                 # Discount cash flows and terminal value
-                pv_fcf = sum(
-                    fcf / ((1 + dcf_discount_rate) ** (i + 1))
-                    for i, fcf in enumerate(dcf_fcf_projections)
-                )
+                pv_fcf = sum(fcf / ((1 + dcf_discount_rate) ** (i + 1)) for i, fcf in enumerate(dcf_fcf_projections))
                 pv_terminal = terminal_value / ((1 + dcf_discount_rate) ** len(dcf_fcf_projections))
-                
+
                 enterprise_value = pv_fcf + pv_terminal
-                
+
                 # Adjust for net debt to get equity value (simplified)
                 # Assuming shares_outstanding_pre_ipo is provided
                 if shares_outstanding_pre_ipo and shares_outstanding_pre_ipo > 0:
                     dcf_fair_value = enterprise_value / shares_outstanding_pre_ipo
                     dcf_result["dcf_fair_value"] = dcf_fair_value
-                    dcf_result["discount_to_fair_value"] = (
-                        (dcf_fair_value - ipo_price) / dcf_fair_value * 100
-                    )
+                    dcf_result["discount_to_fair_value"] = (dcf_fair_value - ipo_price) / dcf_fair_value * 100
             except Exception as e:  # noqa: BLE001
                 logger.warning("DCF calculation failed: %s", e)
                 dcf_result["dcf_error"] = str(e)
@@ -818,10 +813,7 @@ def run_full_ipo_workflow(
         risk_analysis = result_dict.get("risk_analysis", {})
         valuation_analysis = result_dict.get("valuation_analysis", {})
 
-        executive_summary = (
-            f"{company_name} IPO Analysis ({ipo_date}): "
-            f"Total Score {total_score}/100 ({rating_tier}). "
-        )
+        executive_summary = f"{company_name} IPO Analysis ({ipo_date}): " f"Total Score {total_score}/100 ({rating_tier}). "
 
         if growth_analysis.get("metrics", {}).get("revenue_cagr_3yr"):
             rev_cagr = growth_analysis["metrics"]["revenue_cagr_3yr"]

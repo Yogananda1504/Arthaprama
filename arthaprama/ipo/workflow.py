@@ -103,7 +103,6 @@ class IPOWorkflowError(Exception):
     """Exception raised when workflow execution fails."""
 
 
-
 def run_full_ipo_analysis(
     growth_data: dict[str, Any],
     risk_data: dict[str, Any],

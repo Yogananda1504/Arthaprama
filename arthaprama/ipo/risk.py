@@ -19,7 +19,6 @@ class RiskCalculationError(Exception):
     """Exception raised when risk calculations encounter invalid inputs."""
 
 
-
 def _to_decimal(value: Any) -> Decimal:
     """
     Safely convert a value to Decimal for precise arithmetic.
