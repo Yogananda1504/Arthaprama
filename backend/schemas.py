@@ -360,3 +360,254 @@ class ErrorResponse(BaseModel):
     error: str = Field(..., description="Error type")
     message: str = Field(..., description="Human-readable error message")
     detail: Any = Field(default=None, description="Additional error details")
+
+
+# =============================================================================
+# FULL IPO ANALYSIS WORKFLOW SCHEMAS
+# =============================================================================
+
+
+class IPOPOMetadata(BaseModel):
+    """Schema for basic IPO metadata."""
+
+    company_name: str = Field(..., description="Name of the company going public")
+    sector: str = Field(..., description="Industry sector of the company")
+    price_band_lower: Decimal = Field(
+        default=Decimal("0"), description="Price Band Lower Limit", ge=0
+    )
+    price_band_upper: Decimal = Field(
+        default=Decimal("0"), description="Price Band Upper Limit", ge=0
+    )
+    issue_size: Decimal = Field(default=Decimal("0"), description="Issue Size", ge=0)
+    fresh_issue: Decimal = Field(
+        default=Decimal("0"), description="Fresh Issue Amount", ge=0
+    )
+    offer_for_sale: Decimal = Field(
+        default=Decimal("0"), description="Offer for Sale Amount", ge=0
+    )
+
+
+class FullIPOAnalysisRequest(BaseModel):
+    """
+    Request schema for full IPO analysis workflow endpoint.
+
+    This schema aggregates all required input data for comprehensive
+    IPO analysis through the unified workflow engine.
+    """
+
+    meta: IPOPOMetadata = Field(..., description="Basic IPO metadata")
+    growth_data: GrowthDataInput = Field(..., description="Growth metrics data")
+    risk_data: RiskDataInput = Field(..., description="Risk assessment data")
+    valuation_data: ValuationDataInput = Field(..., description="Valuation data")
+    ipo_data: IPOSpecificDataInput = Field(..., description="IPO-specific data")
+    peer_data: PeerDataInput | None = Field(
+        default=None, description="Peer comparison data"
+    )
+    profile: str = Field(
+        default="balanced",
+        description="Investor profile strategy (balanced, conservative, aggressive_growth, deep_value)",
+    )
+
+    @field_validator("profile")
+    @classmethod
+    def validate_profile(cls, v: str) -> str:
+        """Validate that profile is one of the allowed strategies."""
+        valid_profiles = ["balanced", "conservative", "aggressive_growth", "deep_value"]
+        if v.lower() not in valid_profiles:
+            raise ValueError(
+                f"Invalid profile '{v}'. Must be one of: {valid_profiles}"
+            )
+        return v.lower()
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "meta": {
+                    "company_name": "Example Tech Ltd",
+                    "sector": "Technology",
+                    "price_band_lower": 480,
+                    "price_band_upper": 500,
+                    "issue_size": 1000000000,
+                    "fresh_issue": 600000000,
+                    "offer_for_sale": 400000000,
+                },
+                "growth_data": {
+                    "revenue_current": 1200,
+                    "revenue_previous": 1000,
+                    "revenue_3yrs_ago": 700,
+                    "pat_current": 150,
+                    "pat_previous": 100,
+                    "pat_3yrs_ago": 50,
+                    "ebitda_current": 200,
+                    "ebitda_previous": 180,
+                    "eps_current": 25,
+                    "eps_previous": 20,
+                    "ebit": 180,
+                    "cfo_current": 180,
+                    "cfo_previous": 150,
+                    "avg_shareholders_equity": 800,
+                    "capital_employed": 900,
+                },
+                "risk_data": {
+                    "total_debt": 200,
+                    "shareholders_equity": 800,
+                    "cash_equivalents": 100,
+                    "ebitda": 200,
+                    "ebit": 180,
+                    "interest_expense": 20,
+                    "current_assets": 500,
+                    "current_liabilities": 250,
+                    "inventory": 100,
+                    "cfo": 180,
+                    "pat": 150,
+                    "capex": 50,
+                    "largest_customer_rev": 300,
+                    "total_rev": 1200,
+                    "pledged_shares": 0,
+                    "total_promoter_shares": 600000,
+                    "contingent_liabilities": 25,
+                    "net_worth": 800,
+                },
+                "valuation_data": {
+                    "market_cap": 2000,
+                    "pat": 150,
+                    "book_value": 800,
+                    "revenue": 1200,
+                    "ebitda": 200,
+                    "eps": 25,
+                    "ipo_price": 500,
+                    "total_debt": 200,
+                    "cash_equivalents": 100,
+                    "free_cash_flow": 130,
+                    "new_shares": 1000000,
+                    "post_ipo_shares": 10000000,
+                    "post_ipo_diluted_shares": 10500000,
+                    "post_ipo_pat": 160,
+                    "expected_eps_growth_pct": 20,
+                },
+                "ipo_data": {
+                    "ipo_dilution": 10,
+                    "promoter_holding_pre_ipo": 75,
+                    "promoter_holding_post_ipo": 60,
+                    "promoter_pledge_ratio": 0,
+                    "issue_size": 1000000000,
+                    "fresh_issue": 600000000,
+                    "offer_for_sale": 400000000,
+                    "lot_size": 30,
+                    "price_band_lower": 480,
+                    "price_band_upper": 500,
+                },
+                "peer_data": {
+                    "peer_median_pe": 25,
+                    "peer_median_ev_ebitda": 12,
+                    "peer_median_pb": 3,
+                    "peer_market_caps": [1500, 2500, 3000],
+                },
+                "profile": "balanced",
+            }
+        }
+    }
+
+
+class GrowthAnalysisResponse(BaseModel):
+    """Schema for growth analysis result."""
+
+    metrics: dict[str, float] = Field(
+        default_factory=dict, description="Calculated growth metrics"
+    )
+    errors: list[str] = Field(default_factory=list, description="Any errors encountered")
+    success: bool = Field(default=True, description="Whether calculation succeeded")
+
+
+class RiskAnalysisResponse(BaseModel):
+    """Schema for risk analysis result."""
+
+    metrics: dict[str, float] = Field(
+        default_factory=dict, description="Calculated risk metrics"
+    )
+    errors: list[str] = Field(default_factory=list, description="Any errors encountered")
+    success: bool = Field(default=True, description="Whether calculation succeeded")
+
+
+class ValuationAnalysisResponse(BaseModel):
+    """Schema for valuation analysis result."""
+
+    metrics: dict[str, float] = Field(
+        default_factory=dict, description="Calculated valuation metrics"
+    )
+    errors: list[str] = Field(default_factory=list, description="Any errors encountered")
+    success: bool = Field(default=True, description="Whether calculation succeeded")
+
+
+class FullIPOAnalysisResponse(BaseModel):
+    """
+    Response schema for full IPO analysis workflow endpoint.
+
+    Contains structured output with nested objects for growth_analysis,
+    risk_analysis, valuation_analysis, and composite_score.
+    """
+
+    growth_analysis: GrowthAnalysisResponse = Field(
+        ..., description="Growth metrics analysis results"
+    )
+    risk_analysis: RiskAnalysisResponse = Field(
+        ..., description="Risk metrics analysis results"
+    )
+    valuation_analysis: ValuationAnalysisResponse = Field(
+        ..., description="Valuation metrics analysis results"
+    )
+    composite_score: ScoreBreakdownResponse | None = Field(
+        default=None, description="Composite IPO score breakdown"
+    )
+    errors: list[str] = Field(
+        default_factory=list, description="Any errors encountered during analysis"
+    )
+    success: bool = Field(default=True, description="Whether full analysis succeeded")
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "growth_analysis": {
+                    "metrics": {
+                        "revenue_growth_yoy": 20.0,
+                        "profit_growth_yoy": 50.0,
+                        "ebitda_margin": 16.67,
+                        "roe": 18.75,
+                    },
+                    "errors": [],
+                    "success": True,
+                },
+                "risk_analysis": {
+                    "metrics": {
+                        "debt_to_equity": 0.25,
+                        "interest_coverage": 9.0,
+                        "current_ratio": 2.0,
+                    },
+                    "errors": [],
+                    "success": True,
+                },
+                "valuation_analysis": {
+                    "metrics": {
+                        "pe_ratio": 13.33,
+                        "pb_ratio": 2.5,
+                        "ev_to_ebitda": 10.0,
+                    },
+                    "errors": [],
+                    "success": True,
+                },
+                "composite_score": {
+                    "growth_score": 22.5,
+                    "risk_score": 25.0,
+                    "valuation_score": 20.0,
+                    "ipo_quality_score": 8.0,
+                    "total_score": 75.5,
+                    "growth_details": {},
+                    "risk_details": {},
+                    "valuation_details": {},
+                    "ipo_quality_details": {},
+                },
+                "errors": [],
+                "success": True,
+            }
+        }
+    }
