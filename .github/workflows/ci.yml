@@ -53,23 +53,11 @@ jobs:
           poetry run ruff check .
           poetry run black --check arthaprama backend tests
 
-      - name: Run unit tests with coverage
+      - name: Run all tests with coverage
         env:
           PYTHONPATH: .
         run: |
-          poetry run pytest tests/unit/ --cov=arthaprama --cov=backend --cov-report=term-missing --cov-fail-under=70
-
-      - name: Run integration tests
-        env:
-          PYTHONPATH: .
-        run: |
-          poetry run pytest tests/integration/ --cov=arthaprama --cov=backend --cov-report=term-missing --cov-append
-
-      - name: Run MCP tests
-        env:
-          PYTHONPATH: .
-        run: |
-          poetry run pytest tests/test_mcp.py --cov=arthaprama --cov=backend --cov-report=term-missing --cov-append
+          poetry run pytest tests/ --cov=arthaprama --cov=backend --cov-report=term-missing --cov-fail-under=70
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
