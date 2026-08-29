@@ -6,37 +6,33 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Build artifacts
-build/
-dist/
 *.egg-info/
-
-# Logs
-*.log
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
+# Logs and temporary files
+*.log
+*.tmp
 *.swp
 *.swo
 
-# Testing
-.coverage
-htmlcov/
-.coverage.*
-.nox/
-.tox/
+# Editors
+.vscode/
+.idea/
 
-# Python specific
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
 ```
