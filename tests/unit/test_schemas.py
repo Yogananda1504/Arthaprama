@@ -15,14 +15,12 @@ from pydantic import ValidationError
 
 from backend.schemas import (
     FullIPOAnalysisRequest,
-    IPOPOMetadata,
     GrowthDataInput,
-    RiskDataInput,
-    ValuationDataInput,
     IPOSpecificDataInput,
     PeerDataInput,
+    RiskDataInput,
+    ValuationDataInput,
 )
-
 
 # =============================================================================
 # GROWTH DATA INPUT SCHEMA TESTS

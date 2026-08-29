@@ -11,14 +11,12 @@ to maintain mathematical accuracy throughout the computation chain.
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 
 class RiskCalculationError(Exception):
     """Exception raised when risk calculations encounter invalid inputs."""
-
-    pass
 
 
 def _to_decimal(value: Any) -> Decimal:
@@ -408,7 +406,7 @@ def customer_concentration(largest_customer_rev: Any, total_rev: Any, precision:
     if total == 0:
         raise RiskCalculationError("Total revenue cannot be zero")
 
-    concentration = (largest / total) * Decimal("100")
+    concentration = (largest / total) * Decimal(100)
     return concentration.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -442,7 +440,7 @@ def promoter_pledge_ratio(pledged_shares: Any, total_promoter_shares: Any, preci
     if total == 0:
         raise RiskCalculationError("Total promoter shares cannot be zero")
 
-    ratio = (pledged / total) * Decimal("100")
+    ratio = (pledged / total) * Decimal(100)
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -476,7 +474,7 @@ def contingent_liabilities_to_nw(contingent_libs: Any, net_worth: Any, precision
     if nw == 0:
         raise RiskCalculationError("Net worth cannot be zero")
 
-    ratio = (contingent / nw) * Decimal("100")
+    ratio = (contingent / nw) * Decimal(100)
     return ratio.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -511,7 +509,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["debt_to_equity"] = Decimal("0")
+        results["debt_to_equity"] = Decimal(0)
 
     try:
         net_d = net_debt(
@@ -521,7 +519,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
         )
         results["net_debt"] = net_d
     except RiskCalculationError:
-        results["net_debt"] = Decimal("0")
+        results["net_debt"] = Decimal(0)
 
     try:
         results["net_debt_to_ebitda"] = net_debt_to_ebitda(
@@ -530,7 +528,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["net_debt_to_ebitda"] = Decimal("0")
+        results["net_debt_to_ebitda"] = Decimal(0)
 
     try:
         results["interest_coverage"] = interest_coverage(
@@ -539,7 +537,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["interest_coverage"] = Decimal("0")
+        results["interest_coverage"] = Decimal(0)
 
     try:
         results["current_ratio"] = current_ratio(
@@ -548,7 +546,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["current_ratio"] = Decimal("0")
+        results["current_ratio"] = Decimal(0)
 
     try:
         results["quick_ratio"] = quick_ratio(
@@ -558,7 +556,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["quick_ratio"] = Decimal("0")
+        results["quick_ratio"] = Decimal(0)
 
     try:
         results["cfo_to_debt"] = cfo_to_debt(
@@ -567,7 +565,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["cfo_to_debt"] = Decimal("0")
+        results["cfo_to_debt"] = Decimal(0)
 
     try:
         results["cfo_to_pat"] = cfo_to_pat(
@@ -576,7 +574,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["cfo_to_pat"] = Decimal("0")
+        results["cfo_to_pat"] = Decimal(0)
 
     try:
         fcf = free_cash_flow(
@@ -586,7 +584,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
         )
         results["free_cash_flow"] = fcf
     except RiskCalculationError:
-        results["free_cash_flow"] = Decimal("0")
+        results["free_cash_flow"] = Decimal(0)
 
     try:
         results["fcf_to_pat"] = fcf_to_pat(
@@ -595,7 +593,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["fcf_to_pat"] = Decimal("0")
+        results["fcf_to_pat"] = Decimal(0)
 
     try:
         results["customer_concentration"] = customer_concentration(
@@ -604,7 +602,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["customer_concentration"] = Decimal("0")
+        results["customer_concentration"] = Decimal(0)
 
     try:
         results["promoter_pledge_ratio"] = promoter_pledge_ratio(
@@ -613,7 +611,7 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["promoter_pledge_ratio"] = Decimal("0")
+        results["promoter_pledge_ratio"] = Decimal(0)
 
     try:
         results["contingent_liabilities_to_nw"] = contingent_liabilities_to_nw(
@@ -622,6 +620,6 @@ def calculate_all_risk_metrics(financial_data: dict[str, Any], precision: int = 
             precision,
         )
     except RiskCalculationError:
-        results["contingent_liabilities_to_nw"] = Decimal("0")
+        results["contingent_liabilities_to_nw"] = Decimal(0)
 
     return results

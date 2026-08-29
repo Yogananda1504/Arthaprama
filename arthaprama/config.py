@@ -44,15 +44,15 @@ class WeightConfig:
         ipo_quality: Weight allocated to IPO/management quality (out of 10).
     """
 
-    growth: Decimal = Decimal("30")
-    risk: Decimal = Decimal("30")
-    valuation: Decimal = Decimal("30")
-    ipo_quality: Decimal = Decimal("10")
+    growth: Decimal = Decimal(30)
+    risk: Decimal = Decimal(30)
+    valuation: Decimal = Decimal(30)
+    ipo_quality: Decimal = Decimal(10)
 
     def __post_init__(self) -> None:
         """Validate that weights sum to 100."""
         total = self.growth + self.risk + self.valuation + self.ipo_quality
-        if total != Decimal("100"):
+        if total != Decimal(100):
             raise ValueError(
                 f"Weights must sum to 100, got {total}. "
                 f"Growth={self.growth}, Risk={self.risk}, "
@@ -91,14 +91,14 @@ class ThresholdConfig:
     max_debt_to_equity: Decimal = Decimal("2.0")
     min_interest_coverage: Decimal = Decimal("2.0")
     min_current_ratio: Decimal = Decimal("1.5")
-    min_roe: Decimal = Decimal("15")
-    min_roce: Decimal = Decimal("15")
-    max_pe_ratio: Decimal = Decimal("40")
+    min_roe: Decimal = Decimal(15)
+    min_roce: Decimal = Decimal(15)
+    max_pe_ratio: Decimal = Decimal(40)
     max_peg_ratio: Decimal = Decimal("2.0")
-    min_ebitda_margin: Decimal = Decimal("10")
-    min_pat_margin: Decimal = Decimal("5")
-    max_customer_concentration: Decimal = Decimal("50")
-    max_promoter_pledge: Decimal = Decimal("20")
+    min_ebitda_margin: Decimal = Decimal(10)
+    min_pat_margin: Decimal = Decimal(5)
+    max_customer_concentration: Decimal = Decimal(50)
+    max_promoter_pledge: Decimal = Decimal(20)
 
     def to_dict(self) -> dict[str, Decimal]:
         """Convert thresholds to dictionary format."""
@@ -144,10 +144,10 @@ class InvestorProfile:
         return cls(
             strategy=ProfileStrategy.BALANCED,
             weights=WeightConfig(
-                growth=Decimal("30"),
-                risk=Decimal("30"),
-                valuation=Decimal("30"),
-                ipo_quality=Decimal("10"),
+                growth=Decimal(30),
+                risk=Decimal(30),
+                valuation=Decimal(30),
+                ipo_quality=Decimal(10),
             ),
             thresholds=ThresholdConfig(),
         )
@@ -162,23 +162,23 @@ class InvestorProfile:
         return cls(
             strategy=ProfileStrategy.CONSERVATIVE,
             weights=WeightConfig(
-                growth=Decimal("20"),
-                risk=Decimal("40"),
-                valuation=Decimal("30"),
-                ipo_quality=Decimal("10"),
+                growth=Decimal(20),
+                risk=Decimal(40),
+                valuation=Decimal(30),
+                ipo_quality=Decimal(10),
             ),
             thresholds=ThresholdConfig(
                 max_debt_to_equity=Decimal("1.0"),
                 min_interest_coverage=Decimal("3.0"),
                 min_current_ratio=Decimal("2.0"),
-                min_roe=Decimal("12"),
-                min_roce=Decimal("12"),
-                max_pe_ratio=Decimal("25"),
+                min_roe=Decimal(12),
+                min_roce=Decimal(12),
+                max_pe_ratio=Decimal(25),
                 max_peg_ratio=Decimal("1.5"),
-                min_ebitda_margin=Decimal("15"),
-                min_pat_margin=Decimal("8"),
-                max_customer_concentration=Decimal("30"),
-                max_promoter_pledge=Decimal("10"),
+                min_ebitda_margin=Decimal(15),
+                min_pat_margin=Decimal(8),
+                max_customer_concentration=Decimal(30),
+                max_promoter_pledge=Decimal(10),
             ),
         )
 
@@ -193,23 +193,23 @@ class InvestorProfile:
         return cls(
             strategy=ProfileStrategy.AGGRESSIVE_GROWTH,
             weights=WeightConfig(
-                growth=Decimal("40"),
-                risk=Decimal("20"),
-                valuation=Decimal("30"),
-                ipo_quality=Decimal("10"),
+                growth=Decimal(40),
+                risk=Decimal(20),
+                valuation=Decimal(30),
+                ipo_quality=Decimal(10),
             ),
             thresholds=ThresholdConfig(
                 max_debt_to_equity=Decimal("3.0"),
                 min_interest_coverage=Decimal("1.5"),
                 min_current_ratio=Decimal("1.0"),
-                min_roe=Decimal("20"),
-                min_roce=Decimal("20"),
-                max_pe_ratio=Decimal("60"),
+                min_roe=Decimal(20),
+                min_roce=Decimal(20),
+                max_pe_ratio=Decimal(60),
                 max_peg_ratio=Decimal("3.0"),
-                min_ebitda_margin=Decimal("8"),
-                min_pat_margin=Decimal("3"),
-                max_customer_concentration=Decimal("60"),
-                max_promoter_pledge=Decimal("30"),
+                min_ebitda_margin=Decimal(8),
+                min_pat_margin=Decimal(3),
+                max_customer_concentration=Decimal(60),
+                max_promoter_pledge=Decimal(30),
             ),
         )
 
@@ -224,23 +224,23 @@ class InvestorProfile:
         return cls(
             strategy=ProfileStrategy.DEEP_VALUE,
             weights=WeightConfig(
-                growth=Decimal("20"),
-                risk=Decimal("25"),
-                valuation=Decimal("45"),
-                ipo_quality=Decimal("10"),
+                growth=Decimal(20),
+                risk=Decimal(25),
+                valuation=Decimal(45),
+                ipo_quality=Decimal(10),
             ),
             thresholds=ThresholdConfig(
                 max_debt_to_equity=Decimal("1.5"),
                 min_interest_coverage=Decimal("2.5"),
                 min_current_ratio=Decimal("1.5"),
-                min_roe=Decimal("15"),
-                min_roce=Decimal("15"),
-                max_pe_ratio=Decimal("20"),
+                min_roe=Decimal(15),
+                min_roce=Decimal(15),
+                max_pe_ratio=Decimal(20),
                 max_peg_ratio=Decimal("1.0"),
-                min_ebitda_margin=Decimal("12"),
-                min_pat_margin=Decimal("8"),
-                max_customer_concentration=Decimal("40"),
-                max_promoter_pledge=Decimal("15"),
+                min_ebitda_margin=Decimal(12),
+                min_pat_margin=Decimal(8),
+                max_customer_concentration=Decimal(40),
+                max_promoter_pledge=Decimal(15),
             ),
         )
 

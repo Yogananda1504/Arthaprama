@@ -11,14 +11,12 @@ to maintain mathematical accuracy throughout the computation chain.
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 
 class GrowthCalculationError(Exception):
     """Exception raised when growth calculations encounter invalid inputs."""
-
-    pass
 
 
 def _to_decimal(value: Any) -> Decimal:
@@ -42,7 +40,7 @@ def _to_decimal(value: Any) -> Decimal:
         raise GrowthCalculationError(f"Cannot convert '{value}' to Decimal") from e
 
 
-def _safe_divide(numerator: Decimal, denominator: Decimal, default: Decimal = Decimal("0")) -> Decimal:
+def _safe_divide(numerator: Decimal, denominator: Decimal, default: Decimal = Decimal(0)) -> Decimal:
     """
     Safely divide two Decimals, returning a default on division by zero.
 
@@ -86,7 +84,7 @@ def revenue_growth_yoy(current: Any, previous: Any, precision: int = 4) -> Decim
     if prev_rev == 0:
         raise GrowthCalculationError("Previous revenue cannot be zero")
 
-    growth = ((current_rev - prev_rev) / prev_rev) * Decimal("100")
+    growth = ((current_rev - prev_rev) / prev_rev) * Decimal(100)
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -117,7 +115,7 @@ def profit_growth_yoy(current_pat: Any, previous_pat: Any, precision: int = 4) -
     if prev_profit == 0:
         raise GrowthCalculationError("Previous PAT cannot be zero")
 
-    growth = ((current_profit - prev_profit) / prev_profit) * Decimal("100")
+    growth = ((current_profit - prev_profit) / prev_profit) * Decimal(100)
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -148,7 +146,7 @@ def ebitda_growth_yoy(current_ebitda: Any, previous_ebitda: Any, precision: int 
     if prev_eb == 0:
         raise GrowthCalculationError("Previous EBITDA cannot be zero")
 
-    growth = ((current_eb - prev_eb) / prev_eb) * Decimal("100")
+    growth = ((current_eb - prev_eb) / prev_eb) * Decimal(100)
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -179,7 +177,7 @@ def eps_growth_yoy(current_eps: Any, previous_eps: Any, precision: int = 4) -> D
     if prev_earnings == 0:
         raise GrowthCalculationError("Previous EPS cannot be zero")
 
-    growth = ((current_earnings - prev_earnings) / prev_earnings) * Decimal("100")
+    growth = ((current_earnings - prev_earnings) / prev_earnings) * Decimal(100)
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -219,7 +217,7 @@ def revenue_cagr_3yr(current_rev: Any, rev_3yrs_ago: Any, precision: int = 4) ->
     ratio = current / past
     # Use logarithm for precise power calculation with Decimal
     # ratio ** (1/3) = exp(ln(ratio) / 3)
-    cagr = ratio ** (Decimal("1") / Decimal("3")) - Decimal("1")
+    cagr = ratio ** (Decimal(1) / Decimal(3)) - Decimal(1)
     return cagr.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -256,7 +254,7 @@ def pat_cagr_3yr(current_pat: Any, pat_3yrs_ago: Any, precision: int = 4) -> Dec
         raise GrowthCalculationError("Current PAT cannot be negative")
 
     ratio = current / past
-    cagr = ratio ** (Decimal("1") / Decimal("3")) - Decimal("1")
+    cagr = ratio ** (Decimal(1) / Decimal(3)) - Decimal(1)
     return cagr.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -287,7 +285,7 @@ def ebitda_margin(ebitda: Any, revenue: Any, precision: int = 4) -> Decimal:
     if rev == 0:
         raise GrowthCalculationError("Revenue cannot be zero")
 
-    margin = (eb / rev) * Decimal("100")
+    margin = (eb / rev) * Decimal(100)
     return margin.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -318,7 +316,7 @@ def pat_margin(pat: Any, revenue: Any, precision: int = 4) -> Decimal:
     if rev == 0:
         raise GrowthCalculationError("Revenue cannot be zero")
 
-    margin = (profit / rev) * Decimal("100")
+    margin = (profit / rev) * Decimal(100)
     return margin.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -349,7 +347,7 @@ def roe(pat: Any, avg_shareholders_equity: Any, precision: int = 4) -> Decimal:
     if equity == 0:
         raise GrowthCalculationError("Shareholders equity cannot be zero")
 
-    return_on_equity = (profit / equity) * Decimal("100")
+    return_on_equity = (profit / equity) * Decimal(100)
     return return_on_equity.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -380,7 +378,7 @@ def roce(ebit: Any, capital_employed: Any, precision: int = 4) -> Decimal:
     if capital == 0:
         raise GrowthCalculationError("Capital employed cannot be zero")
 
-    return_on_capital = (earnings / capital) * Decimal("100")
+    return_on_capital = (earnings / capital) * Decimal(100)
     return return_on_capital.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -411,7 +409,7 @@ def cfo_growth(current_cfo: Any, previous_cfo: Any, precision: int = 4) -> Decim
     if prev_flow == 0:
         raise GrowthCalculationError("Previous CFO cannot be zero")
 
-    growth = ((current_flow - prev_flow) / prev_flow) * Decimal("100")
+    growth = ((current_flow - prev_flow) / prev_flow) * Decimal(100)
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -446,7 +444,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["revenue_growth_yoy"] = Decimal("0")
+        results["revenue_growth_yoy"] = Decimal(0)
 
     try:
         results["profit_growth_yoy"] = profit_growth_yoy(
@@ -455,7 +453,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["profit_growth_yoy"] = Decimal("0")
+        results["profit_growth_yoy"] = Decimal(0)
 
     try:
         results["ebitda_growth_yoy"] = ebitda_growth_yoy(
@@ -464,7 +462,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["ebitda_growth_yoy"] = Decimal("0")
+        results["ebitda_growth_yoy"] = Decimal(0)
 
     try:
         results["eps_growth_yoy"] = eps_growth_yoy(
@@ -473,7 +471,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["eps_growth_yoy"] = Decimal("0")
+        results["eps_growth_yoy"] = Decimal(0)
 
     try:
         results["revenue_cagr_3yr"] = revenue_cagr_3yr(
@@ -482,7 +480,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["revenue_cagr_3yr"] = Decimal("0")
+        results["revenue_cagr_3yr"] = Decimal(0)
 
     try:
         results["pat_cagr_3yr"] = pat_cagr_3yr(
@@ -491,7 +489,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["pat_cagr_3yr"] = Decimal("0")
+        results["pat_cagr_3yr"] = Decimal(0)
 
     try:
         results["ebitda_margin"] = ebitda_margin(
@@ -500,7 +498,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["ebitda_margin"] = Decimal("0")
+        results["ebitda_margin"] = Decimal(0)
 
     try:
         results["pat_margin"] = pat_margin(
@@ -509,7 +507,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["pat_margin"] = Decimal("0")
+        results["pat_margin"] = Decimal(0)
 
     try:
         results["roe"] = roe(
@@ -518,7 +516,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["roe"] = Decimal("0")
+        results["roe"] = Decimal(0)
 
     try:
         results["roce"] = roce(
@@ -527,7 +525,7 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["roce"] = Decimal("0")
+        results["roce"] = Decimal(0)
 
     try:
         results["cfo_growth"] = cfo_growth(
@@ -536,6 +534,6 @@ def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int 
             precision,
         )
     except GrowthCalculationError:
-        results["cfo_growth"] = Decimal("0")
+        results["cfo_growth"] = Decimal(0)
 
     return results

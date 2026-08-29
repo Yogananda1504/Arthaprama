@@ -16,13 +16,13 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any
 
-from arthaprama.ipo.growth import calculate_all_growth_metrics, GrowthCalculationError
-from arthaprama.ipo.risk import calculate_all_risk_metrics, RiskCalculationError
+from arthaprama.ipo.growth import GrowthCalculationError, calculate_all_growth_metrics
+from arthaprama.ipo.risk import RiskCalculationError, calculate_all_risk_metrics
+from arthaprama.ipo.scoring import ScoreBreakdown, generate_ipo_score
 from arthaprama.ipo.valuation import (
-    calculate_all_valuation_metrics,
     ValuationCalculationError,
+    calculate_all_valuation_metrics,
 )
-from arthaprama.ipo.scoring import generate_ipo_score, ScoreBreakdown
 
 
 @dataclass
@@ -101,8 +101,6 @@ class FullIPOAnalysisResult:
 
 class IPOWorkflowError(Exception):
     """Exception raised when workflow execution fails."""
-
-    pass
 
 
 def run_full_ipo_analysis(
@@ -186,73 +184,76 @@ def run_full_ipo_analysis(
     result = FullIPOAnalysisResult()
 
     # Step 1: Calculate Growth Metrics
-    try:
-        growth_metrics = calculate_all_growth_metrics(growth_data, precision)
-        result.growth_analysis = GrowthAnalysisResult(
-            metrics=growth_metrics,
-            errors=[],
-            success=True,
-        )
-    except GrowthCalculationError as e:
+    if not growth_data:
         result.growth_analysis = GrowthAnalysisResult(
             metrics={},
-            errors=[str(e)],
+            errors=["Missing growth data"],
             success=False,
         )
-        result.errors.append(f"Growth calculation error: {str(e)}")
-    except Exception as e:
-        result.growth_analysis = GrowthAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Growth calculation failed: {str(e)}")
+        result.errors.append("Growth calculation error: Missing growth data")
+    else:
+        try:
+            growth_metrics = calculate_all_growth_metrics(growth_data, precision)
+            result.growth_analysis = GrowthAnalysisResult(
+                metrics=growth_metrics,
+                errors=[],
+                success=True,
+            )
+        except GrowthCalculationError as e:
+            result.growth_analysis = GrowthAnalysisResult(
+                metrics={},
+                errors=[str(e)],
+                success=False,
+            )
+            result.errors.append(f"Growth calculation error: {e!s}")
 
     # Step 2: Calculate Risk Metrics
-    try:
-        risk_metrics = calculate_all_risk_metrics(risk_data, precision)
-        result.risk_analysis = RiskAnalysisResult(
-            metrics=risk_metrics,
-            errors=[],
-            success=True,
-        )
-    except RiskCalculationError as e:
+    if not risk_data:
         result.risk_analysis = RiskAnalysisResult(
             metrics={},
-            errors=[str(e)],
+            errors=["Missing risk data"],
             success=False,
         )
-        result.errors.append(f"Risk calculation error: {str(e)}")
-    except Exception as e:
-        result.risk_analysis = RiskAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Risk calculation failed: {str(e)}")
+        result.errors.append("Risk calculation error: Missing risk data")
+    else:
+        try:
+            risk_metrics = calculate_all_risk_metrics(risk_data, precision)
+            result.risk_analysis = RiskAnalysisResult(
+                metrics=risk_metrics,
+                errors=[],
+                success=True,
+            )
+        except RiskCalculationError as e:
+            result.risk_analysis = RiskAnalysisResult(
+                metrics={},
+                errors=[str(e)],
+                success=False,
+            )
+            result.errors.append(f"Risk calculation error: {e!s}")
 
     # Step 3: Calculate Valuation Metrics
-    try:
-        valuation_metrics = calculate_all_valuation_metrics(valuation_data, peer_data, precision)
-        result.valuation_analysis = ValuationAnalysisResult(
-            metrics=valuation_metrics,
-            errors=[],
-            success=True,
-        )
-    except ValuationCalculationError as e:
+    if not valuation_data:
         result.valuation_analysis = ValuationAnalysisResult(
             metrics={},
-            errors=[str(e)],
+            errors=["Missing valuation data"],
             success=False,
         )
-        result.errors.append(f"Valuation calculation error: {str(e)}")
-    except Exception as e:
-        result.valuation_analysis = ValuationAnalysisResult(
-            metrics={},
-            errors=[f"Unexpected error: {str(e)}"],
-            success=False,
-        )
-        result.errors.append(f"Valuation calculation failed: {str(e)}")
+        result.errors.append("Valuation calculation error: Missing valuation data")
+    else:
+        try:
+            valuation_metrics = calculate_all_valuation_metrics(valuation_data, peer_data, precision)
+            result.valuation_analysis = ValuationAnalysisResult(
+                metrics=valuation_metrics,
+                errors=[],
+                success=True,
+            )
+        except ValuationCalculationError as e:
+            result.valuation_analysis = ValuationAnalysisResult(
+                metrics={},
+                errors=[str(e)],
+                success=False,
+            )
+            result.errors.append(f"Valuation calculation error: {e!s}")
 
     # Step 4: Generate Composite Score (only if all analyses succeeded or have partial data)
     try:
@@ -267,8 +268,8 @@ def run_full_ipo_analysis(
             peer_data=peer_data,
         )
         result.composite_score = composite
-    except Exception as e:
-        result.errors.append(f"Scoring failed: {str(e)}")
+    except Exception as e:  # noqa: BLE001
+        result.errors.append(f"Scoring failed: {e!s}")
         result.composite_score = None
 
     # Determine overall success

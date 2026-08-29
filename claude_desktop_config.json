@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "arthaprama-stdio": {
+      "command": "python",
+      "args": ["-m", "backend.mcp_server"],
+      "cwd": "/path/to/your/arthaprama/repository",
+      "description": "Arthaprama IPO Intelligence Engine - Stdio Mode for Claude Desktop",
+      "env": {
+        "PYTHONPATH": "/path/to/your/arthaprama/repository"
+      }
+    },
+    "arthaprama-sse": {
+      "url": "http://localhost:8000/sse",
+      "description": "Arthaprama IPO Intelligence Engine - SSE Mode via FastAPI",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_TOKEN_IF_REQUIRED"
+      }
+    }
+  }
+}

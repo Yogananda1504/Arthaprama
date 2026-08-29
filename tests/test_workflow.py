@@ -7,8 +7,8 @@ This module contains comprehensive tests for:
 3. Handling of invalid or partial schemas with appropriate HTTP 422 errors
 """
 
-import json
 import io
+import json
 from decimal import Decimal
 from typing import Any
 
@@ -16,15 +16,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from arthaprama.ipo.workflow import (
-    run_full_ipo_analysis,
+    GrowthAnalysisResult,
     IPOWorkflowEngine,
     IPOWorkflowError,
-    GrowthAnalysisResult,
-    RiskAnalysisResult,
-    ValuationAnalysisResult,
-    FullIPOAnalysisResult,
+    run_full_ipo_analysis,
 )
-
 
 # =============================================================================
 # TEST DATA FIXTURES
@@ -556,7 +552,7 @@ class TestAnalyzeUploadEndpoint:
     ) -> None:
         """Test successful analysis from uploaded JSON file."""
         file_content = json.dumps(full_ipo_request_payload)
-        files = {"file": ("test_ipo.json", io.StringIO(file_content), "application/json")}
+        files = {"file": ("test_ipo.json", io.BytesIO(file_content.encode("utf-8")), "application/json")}
 
         response = client.post("/api/v1/ipo/analyze/upload", files=files)
 
@@ -571,7 +567,7 @@ class TestAnalyzeUploadEndpoint:
     ) -> None:
         """Test upload with invalid JSON returns 400."""
         file_content = "{ invalid json }"
-        files = {"file": ("invalid.json", io.StringIO(file_content), "application/json")}
+        files = {"file": ("invalid.json", io.BytesIO(file_content.encode("utf-8")), "application/json")}
 
         response = client.post("/api/v1/ipo/analyze/upload", files=files)
         assert response.status_code == 400
@@ -583,7 +579,7 @@ class TestAnalyzeUploadEndpoint:
     ) -> None:
         """Test upload with unsupported file format returns 400."""
         file_content = json.dumps(full_ipo_request_payload)
-        files = {"file": ("test.csv", io.StringIO(file_content), "text/csv")}
+        files = {"file": ("test.csv", io.BytesIO(file_content.encode("utf-8")), "text/csv")}
 
         response = client.post("/api/v1/ipo/analyze/upload", files=files)
         assert response.status_code == 400
@@ -594,7 +590,6 @@ class TestAnalyzeUploadEndpoint:
     ) -> None:
         """Test upload without filename returns 400."""
         # This is tricky to test directly; we rely on FastAPI's handling
-        pass
 
     def test_upload_schema_validation_error(
         self,
@@ -609,7 +604,7 @@ class TestAnalyzeUploadEndpoint:
         files = {
             "file": (
                 "invalid_schema.json",
-                io.StringIO(file_content),
+                io.BytesIO(file_content.encode("utf-8")),
                 "application/json",
             )
         }
