@@ -333,9 +333,7 @@ def get_profile(strategy: str | ProfileStrategy = "balanced") -> InvestorProfile
             strategy_enum = ProfileStrategy(strategy.lower())
         except ValueError as e:
             valid_strategies = [s.value for s in ProfileStrategy]
-            raise ValueError(
-                f"Unknown strategy '{strategy}'. Valid options: {valid_strategies}"
-            ) from e
+            raise ValueError(f"Unknown strategy '{strategy}'. Valid options: {valid_strategies}") from e
     else:
         strategy_enum = strategy
 
@@ -388,36 +386,20 @@ def create_custom_profile(
     # Override thresholds if provided
     if thresholds:
         threshold_config = ThresholdConfig(
-            max_debt_to_equity=thresholds.get(
-                "max_debt_to_equity", base_profile.thresholds.max_debt_to_equity
-            ),
-            min_interest_coverage=thresholds.get(
-                "min_interest_coverage", base_profile.thresholds.min_interest_coverage
-            ),
-            min_current_ratio=thresholds.get(
-                "min_current_ratio", base_profile.thresholds.min_current_ratio
-            ),
+            max_debt_to_equity=thresholds.get("max_debt_to_equity", base_profile.thresholds.max_debt_to_equity),
+            min_interest_coverage=thresholds.get("min_interest_coverage", base_profile.thresholds.min_interest_coverage),
+            min_current_ratio=thresholds.get("min_current_ratio", base_profile.thresholds.min_current_ratio),
             min_roe=thresholds.get("min_roe", base_profile.thresholds.min_roe),
             min_roce=thresholds.get("min_roce", base_profile.thresholds.min_roce),
-            max_pe_ratio=thresholds.get(
-                "max_pe_ratio", base_profile.thresholds.max_pe_ratio
-            ),
-            max_peg_ratio=thresholds.get(
-                "max_peg_ratio", base_profile.thresholds.max_peg_ratio
-            ),
-            min_ebitda_margin=thresholds.get(
-                "min_ebitda_margin", base_profile.thresholds.min_ebitda_margin
-            ),
-            min_pat_margin=thresholds.get(
-                "min_pat_margin", base_profile.thresholds.min_pat_margin
-            ),
+            max_pe_ratio=thresholds.get("max_pe_ratio", base_profile.thresholds.max_pe_ratio),
+            max_peg_ratio=thresholds.get("max_peg_ratio", base_profile.thresholds.max_peg_ratio),
+            min_ebitda_margin=thresholds.get("min_ebitda_margin", base_profile.thresholds.min_ebitda_margin),
+            min_pat_margin=thresholds.get("min_pat_margin", base_profile.thresholds.min_pat_margin),
             max_customer_concentration=thresholds.get(
                 "max_customer_concentration",
                 base_profile.thresholds.max_customer_concentration,
             ),
-            max_promoter_pledge=thresholds.get(
-                "max_promoter_pledge", base_profile.thresholds.max_promoter_pledge
-            ),
+            max_promoter_pledge=thresholds.get("max_promoter_pledge", base_profile.thresholds.max_promoter_pledge),
         )
     else:
         threshold_config = base_profile.thresholds

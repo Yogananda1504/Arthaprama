@@ -69,9 +69,7 @@ class ScoreBreakdown:
         }
 
 
-def _normalize_to_scale(
-    value: Decimal, min_val: Decimal, max_val: Decimal, scale: Decimal
-) -> Decimal:
+def _normalize_to_scale(value: Decimal, min_val: Decimal, max_val: Decimal, scale: Decimal) -> Decimal:
     """
     Normalize a value to a given scale based on min/max bounds.
 
@@ -122,9 +120,7 @@ def _calculate_growth_score(
         "value": float(rev_growth),
         "threshold": float(thresholds.get("min_revenue_growth", Decimal("10"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(rev_growth, Decimal("0"), Decimal("50"), Decimal("2"))
-    )
+    sub_scores.append(_normalize_to_scale(rev_growth, Decimal("0"), Decimal("50"), Decimal("2")))
 
     # Profit Growth YoY (weight: 3 within growth)
     profit_growth = growth_metrics.get("profit_growth_yoy", Decimal("0"))
@@ -132,9 +128,7 @@ def _calculate_growth_score(
         "value": float(profit_growth),
         "threshold": float(thresholds.get("min_profit_growth", Decimal("15"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(profit_growth, Decimal("0"), Decimal("50"), Decimal("3"))
-    )
+    sub_scores.append(_normalize_to_scale(profit_growth, Decimal("0"), Decimal("50"), Decimal("3")))
 
     # EBITDA Growth YoY (weight: 2 within growth)
     ebitda_growth = growth_metrics.get("ebitda_growth_yoy", Decimal("0"))
@@ -142,9 +136,7 @@ def _calculate_growth_score(
         "value": float(ebitda_growth),
         "threshold": float(thresholds.get("min_ebitda_growth", Decimal("10"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(ebitda_growth, Decimal("0"), Decimal("50"), Decimal("2"))
-    )
+    sub_scores.append(_normalize_to_scale(ebitda_growth, Decimal("0"), Decimal("50"), Decimal("2")))
 
     # EPS Growth YoY (weight: 2 within growth)
     eps_growth = growth_metrics.get("eps_growth_yoy", Decimal("0"))
@@ -152,9 +144,7 @@ def _calculate_growth_score(
         "value": float(eps_growth),
         "threshold": float(thresholds.get("min_eps_growth", Decimal("10"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(eps_growth, Decimal("0"), Decimal("50"), Decimal("2"))
-    )
+    sub_scores.append(_normalize_to_scale(eps_growth, Decimal("0"), Decimal("50"), Decimal("2")))
 
     # Revenue CAGR 3yr (weight: 3 within growth)
     rev_cagr = growth_metrics.get("revenue_cagr_3yr", Decimal("0")) * Decimal("100")
@@ -162,9 +152,7 @@ def _calculate_growth_score(
         "value": float(rev_cagr),
         "threshold": float(thresholds.get("min_cagr", Decimal("15"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(rev_cagr, Decimal("0"), Decimal("50"), Decimal("3"))
-    )
+    sub_scores.append(_normalize_to_scale(rev_cagr, Decimal("0"), Decimal("50"), Decimal("3")))
 
     # PAT CAGR 3yr (weight: 3 within growth)
     pat_cagr = growth_metrics.get("pat_cagr_3yr", Decimal("0")) * Decimal("100")
@@ -172,9 +160,7 @@ def _calculate_growth_score(
         "value": float(pat_cagr),
         "threshold": float(thresholds.get("min_cagr", Decimal("15"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(pat_cagr, Decimal("0"), Decimal("50"), Decimal("3"))
-    )
+    sub_scores.append(_normalize_to_scale(pat_cagr, Decimal("0"), Decimal("50"), Decimal("3")))
 
     # EBITDA Margin (weight: 2 within growth)
     ebitda_margin = growth_metrics.get("ebitda_margin", Decimal("0"))
@@ -182,11 +168,7 @@ def _calculate_growth_score(
         "value": float(ebitda_margin),
         "threshold": float(thresholds.get("min_ebitda_margin", Decimal("10"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(
-            ebitda_margin, Decimal("0"), Decimal("40"), Decimal("2")
-        )
-    )
+    sub_scores.append(_normalize_to_scale(ebitda_margin, Decimal("0"), Decimal("40"), Decimal("2")))
 
     # PAT Margin (weight: 2 within growth)
     pat_margin = growth_metrics.get("pat_margin", Decimal("0"))
@@ -194,9 +176,7 @@ def _calculate_growth_score(
         "value": float(pat_margin),
         "threshold": float(thresholds.get("min_pat_margin", Decimal("5"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(pat_margin, Decimal("0"), Decimal("30"), Decimal("2"))
-    )
+    sub_scores.append(_normalize_to_scale(pat_margin, Decimal("0"), Decimal("30"), Decimal("2")))
 
     # ROE (weight: 3 within growth)
     roe = growth_metrics.get("roe", Decimal("0"))
@@ -204,9 +184,7 @@ def _calculate_growth_score(
         "value": float(roe),
         "threshold": float(thresholds.get("min_roe", Decimal("15"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(roe, Decimal("0"), Decimal("40"), Decimal("3"))
-    )
+    sub_scores.append(_normalize_to_scale(roe, Decimal("0"), Decimal("40"), Decimal("3")))
 
     # ROCE (weight: 3 within growth)
     roce = growth_metrics.get("roce", Decimal("0"))
@@ -214,9 +192,7 @@ def _calculate_growth_score(
         "value": float(roce),
         "threshold": float(thresholds.get("min_roce", Decimal("15"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(roce, Decimal("0"), Decimal("40"), Decimal("3"))
-    )
+    sub_scores.append(_normalize_to_scale(roce, Decimal("0"), Decimal("40"), Decimal("3")))
 
     # CFO Growth (weight: 2 within growth)
     cfo_growth = growth_metrics.get("cfo_growth", Decimal("0"))
@@ -224,9 +200,7 @@ def _calculate_growth_score(
         "value": float(cfo_growth),
         "threshold": float(thresholds.get("min_cfo_growth", Decimal("10"))),
     }
-    sub_scores.append(
-        _normalize_to_scale(cfo_growth, Decimal("0"), Decimal("50"), Decimal("2"))
-    )
+    sub_scores.append(_normalize_to_scale(cfo_growth, Decimal("0"), Decimal("50"), Decimal("2")))
 
     total = sum(sub_scores)
     # Scale to max_points
@@ -267,7 +241,10 @@ def _calculate_risk_score(
     # Net Debt to EBITDA (lower is better, weight: 3)
     nd_ebitda = risk_metrics.get("net_debt_to_ebitda", Decimal("0"))
     max_nd = Decimal("5")  # Industry standard max
-    details["net_debt_to_ebitda"] = {"value": float(nd_ebitda), "threshold": float(max_nd)}
+    details["net_debt_to_ebitda"] = {
+        "value": float(nd_ebitda),
+        "threshold": float(max_nd),
+    }
     nd_score = max(Decimal("0"), (max_nd - nd_ebitda) / max_nd) * Decimal("3")
     sub_scores.append(nd_score.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
@@ -447,7 +424,10 @@ def _calculate_ipo_quality_score(
     if isinstance(dilution, (int, float)):
         dilution = Decimal(str(dilution))
     max_dilution = Decimal("25")  # Max acceptable dilution
-    details["ipo_dilution"] = {"value": float(dilution), "threshold": float(max_dilution)}
+    details["ipo_dilution"] = {
+        "value": float(dilution),
+        "threshold": float(max_dilution),
+    }
     dilution_score = max(Decimal("0"), (max_dilution - dilution) / max_dilution) * Decimal("3")
     sub_scores.append(dilution_score.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
@@ -467,7 +447,10 @@ def _calculate_ipo_quality_score(
     if isinstance(pledge, (int, float)):
         pledge = Decimal(str(pledge))
     max_pledge = thresholds.get("max_promoter_pledge", Decimal("20"))
-    details["promoter_pledge_ratio"] = {"value": float(pledge), "threshold": float(max_pledge)}
+    details["promoter_pledge_ratio"] = {
+        "value": float(pledge),
+        "threshold": float(max_pledge),
+    }
     pledge_score = max(Decimal("0"), (max_pledge - pledge) / max_pledge) * Decimal("3")
     sub_scores.append(pledge_score.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
@@ -553,21 +536,13 @@ def generate_ipo_score(
     valuation_metrics = calculate_all_valuation_metrics(valuation_data, peer_data)
 
     # Calculate pillar scores
-    growth_score, growth_details = _calculate_growth_score(
-        growth_metrics, thresholds, weights["growth"]
-    )
+    growth_score, growth_details = _calculate_growth_score(growth_metrics, thresholds, weights["growth"])
 
-    risk_score, risk_details = _calculate_risk_score(
-        risk_metrics, thresholds, weights["risk"]
-    )
+    risk_score, risk_details = _calculate_risk_score(risk_metrics, thresholds, weights["risk"])
 
-    valuation_score, valuation_details = _calculate_valuation_score(
-        valuation_metrics, thresholds, weights["valuation"]
-    )
+    valuation_score, valuation_details = _calculate_valuation_score(valuation_metrics, thresholds, weights["valuation"])
 
-    ipo_quality_score, ipo_quality_details = _calculate_ipo_quality_score(
-        ipo_data, thresholds, weights["ipo_quality"]
-    )
+    ipo_quality_score, ipo_quality_details = _calculate_ipo_quality_score(ipo_data, thresholds, weights["ipo_quality"])
 
     # Calculate total score
     total_score = (growth_score + risk_score + valuation_score + ipo_quality_score).quantize(

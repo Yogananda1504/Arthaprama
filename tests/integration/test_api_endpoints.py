@@ -158,9 +158,7 @@ class TestAnalyzeUploadEndpoint:
             # Missing all other required fields
         }
         file_content = json.dumps(invalid_payload)
-        files = {
-            "file": ("invalid_schema.json", io.BytesIO(file_content.encode()), "application/json")
-        }
+        files = {"file": ("invalid_schema.json", io.BytesIO(file_content.encode()), "application/json")}
 
         response = client.post("/api/v1/ipo/analyze/upload", files=files)
         assert response.status_code == 422

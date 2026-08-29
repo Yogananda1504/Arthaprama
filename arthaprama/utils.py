@@ -26,9 +26,7 @@ def _to_decimal(value: Any) -> Decimal:
     return Decimal(str(value))
 
 
-def format_inr(
-    value: Any, precision: int = 2, include_symbol: bool = True
-) -> str:
+def format_inr(value: Any, precision: int = 2, include_symbol: bool = True) -> str:
     """
     Format a numeric value as Indian Rupees with proper comma placement.
 
@@ -49,9 +47,7 @@ def format_inr(
         >>> format_inr(50000.5, precision=0)
         '₹50,000'
     """
-    decimal_value = _to_decimal(value).quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    decimal_value = _to_decimal(value).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
     # Handle negative values
     is_negative = decimal_value < 0
@@ -116,9 +112,7 @@ def format_inr_lakh(value: Any, precision: int = 2) -> str:
     """
     decimal_value = _to_decimal(value)
     lakhs = decimal_value / Decimal("100000")
-    formatted_lakhs = lakhs.quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    formatted_lakhs = lakhs.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
     if formatted_lakhs == 1:
         return f"₹{formatted_lakhs} Lakh"
@@ -146,9 +140,7 @@ def format_inr_cr(value: Any, precision: int = 2) -> str:
     """
     decimal_value = _to_decimal(value)
     crores = decimal_value / Decimal("10000000")
-    formatted_crores = crores.quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    formatted_crores = crores.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
     return f"₹{formatted_crores} Cr"
 
 
@@ -168,9 +160,7 @@ def to_lakhs(value: Any, precision: int = 4) -> Decimal:
         Decimal('10.0000')
     """
     decimal_value = _to_decimal(value)
-    return (decimal_value / Decimal("100000")).quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    return (decimal_value / Decimal("100000")).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
 def to_crores(value: Any, precision: int = 4) -> Decimal:
@@ -189,14 +179,10 @@ def to_crores(value: Any, precision: int = 4) -> Decimal:
         Decimal('1.0000')
     """
     decimal_value = _to_decimal(value)
-    return (decimal_value / Decimal("10000000")).quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    return (decimal_value / Decimal("10000000")).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def format_percentage(
-    value: Any, precision: int = 2, include_sign: bool = False
-) -> str:
+def format_percentage(value: Any, precision: int = 2, include_sign: bool = False) -> str:
     """
     Format a numeric value as a percentage.
 
@@ -216,9 +202,7 @@ def format_percentage(
         >>> format_percentage(10.0, include_sign=True)
         '+10.00%'
     """
-    decimal_value = _to_decimal(value).quantize(
-        Decimal(10) ** -precision, rounding=ROUND_HALF_UP
-    )
+    decimal_value = _to_decimal(value).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
     result = str(decimal_value)
     # Ensure precision is maintained even for whole numbers

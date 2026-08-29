@@ -42,9 +42,7 @@ def _to_decimal(value: Any) -> Decimal:
         raise GrowthCalculationError(f"Cannot convert '{value}' to Decimal") from e
 
 
-def _safe_divide(
-    numerator: Decimal, denominator: Decimal, default: Decimal = Decimal("0")
-) -> Decimal:
+def _safe_divide(numerator: Decimal, denominator: Decimal, default: Decimal = Decimal("0")) -> Decimal:
     """
     Safely divide two Decimals, returning a default on division by zero.
 
@@ -92,9 +90,7 @@ def revenue_growth_yoy(current: Any, previous: Any, precision: int = 4) -> Decim
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def profit_growth_yoy(
-    current_pat: Any, previous_pat: Any, precision: int = 4
-) -> Decimal:
+def profit_growth_yoy(current_pat: Any, previous_pat: Any, precision: int = 4) -> Decimal:
     """
     Calculate Year-over-Year Profit After Tax (PAT) Growth percentage.
 
@@ -125,9 +121,7 @@ def profit_growth_yoy(
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def ebitda_growth_yoy(
-    current_ebitda: Any, previous_ebitda: Any, precision: int = 4
-) -> Decimal:
+def ebitda_growth_yoy(current_ebitda: Any, previous_ebitda: Any, precision: int = 4) -> Decimal:
     """
     Calculate Year-over-Year EBITDA Growth percentage.
 
@@ -158,9 +152,7 @@ def ebitda_growth_yoy(
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def eps_growth_yoy(
-    current_eps: Any, previous_eps: Any, precision: int = 4
-) -> Decimal:
+def eps_growth_yoy(current_eps: Any, previous_eps: Any, precision: int = 4) -> Decimal:
     """
     Calculate Year-over-Year Earnings Per Share (EPS) Growth percentage.
 
@@ -191,9 +183,7 @@ def eps_growth_yoy(
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def revenue_cagr_3yr(
-    current_rev: Any, rev_3yrs_ago: Any, precision: int = 4
-) -> Decimal:
+def revenue_cagr_3yr(current_rev: Any, rev_3yrs_ago: Any, precision: int = 4) -> Decimal:
     """
     Calculate 3-Year Revenue Compound Annual Growth Rate (CAGR).
 
@@ -233,9 +223,7 @@ def revenue_cagr_3yr(
     return cagr.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def pat_cagr_3yr(
-    current_pat: Any, pat_3yrs_ago: Any, precision: int = 4
-) -> Decimal:
+def pat_cagr_3yr(current_pat: Any, pat_3yrs_ago: Any, precision: int = 4) -> Decimal:
     """
     Calculate 3-Year PAT Compound Annual Growth Rate (CAGR).
 
@@ -396,9 +384,7 @@ def roce(ebit: Any, capital_employed: Any, precision: int = 4) -> Decimal:
     return return_on_capital.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def cfo_growth(
-    current_cfo: Any, previous_cfo: Any, precision: int = 4
-) -> Decimal:
+def cfo_growth(current_cfo: Any, previous_cfo: Any, precision: int = 4) -> Decimal:
     """
     Calculate Year-over-Year Cash Flow from Operations (CFO) Growth percentage.
 
@@ -429,9 +415,7 @@ def cfo_growth(
     return growth.quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
-def calculate_all_growth_metrics(
-    financial_data: dict[str, Any], precision: int = 4
-) -> dict[str, Decimal]:
+def calculate_all_growth_metrics(financial_data: dict[str, Any], precision: int = 4) -> dict[str, Decimal]:
     """
     Calculate all growth metrics from a comprehensive financial data dictionary.
 

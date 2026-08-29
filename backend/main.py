@@ -40,16 +40,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Startup
     logger.info("Starting Arthaprama IPO Analysis API...")
     logger.info("Loading mathematical engines...")
-    
+
     # Import core modules to verify they load correctly
     from arthaprama.config import get_profile
     from arthaprama.ipo import growth, risk, valuation, scoring
-    
+
     logger.info("All modules loaded successfully.")
     logger.info("Arthaprama API is ready to accept requests.")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Arthaprama API...")
     logger.info("Cleanup complete.")
