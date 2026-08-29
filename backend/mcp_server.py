@@ -455,7 +455,7 @@ def model_ipo_valuation(
                     dcf_result["discount_to_fair_value"] = (
                         (dcf_fair_value - ipo_price) / dcf_fair_value * 100
                     )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning("DCF calculation failed: %s", e)
                 dcf_result["dcf_error"] = str(e)
 
@@ -607,7 +607,7 @@ def generate_composite_ipo_score(
             "recommendation": recommendation,
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Composite score generation error: {e}")
         return {"success": False, "error": str(e)}
 
@@ -848,7 +848,7 @@ def run_full_ipo_workflow(
         }
 
     except Exception as e:
-        logger.exception("Full IPO workflow error: %s", e)
+        logger.exception("Full IPO workflow error")
         return {
             "success": False,
             "error": str(e),

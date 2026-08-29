@@ -167,10 +167,10 @@ class MetricDetail(BaseModel):
 class ScoreBreakdownResponse(BaseModel):
     """Schema for score breakdown response."""
 
-    growth_score: float = Field(..., description="Growth pillar score", ge=0, le=30)
-    risk_score: float = Field(..., description="Risk pillar score", ge=0, le=30)
-    valuation_score: float = Field(..., description="Valuation pillar score", ge=0, le=30)
-    ipo_quality_score: float = Field(..., description="IPO quality pillar score", ge=0, le=10)
+    growth_score: float = Field(..., description="Growth pillar score", ge=0, le=100)
+    risk_score: float = Field(..., description="Risk pillar score", ge=0, le=100)
+    valuation_score: float = Field(..., description="Valuation pillar score", ge=0, le=100)
+    ipo_quality_score: float = Field(..., description="IPO quality pillar score", ge=0, le=100)
     total_score: float = Field(..., description="Total composite score", ge=0, le=100)
     growth_details: dict[str, Any] = Field(default_factory=dict, description="Detailed growth scoring breakdown")
     risk_details: dict[str, Any] = Field(default_factory=dict, description="Detailed risk scoring breakdown")

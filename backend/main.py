@@ -52,7 +52,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         # Mount MCP SSE routes onto the FastAPI app
         mcp_server.mount_sse_routes(app)
         logger.info("MCP SSE transport mounted successfully at /sse endpoint")
-    except Exception:
+    except Exception:  # noqa: BLE001
         logger.warning("MCP SSE initialization skipped (may not be required)")
     
     logger.info("Arthaprama API is ready to accept requests.")

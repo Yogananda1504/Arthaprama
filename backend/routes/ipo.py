@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import ValidationError
 
 from arthaprama.config import ProfileStrategy, get_profile
@@ -451,7 +451,7 @@ async def analyze_full_ipo(request: FullIPOAnalysisRequest) -> FullIPOAnalysisRe
     """,
 )
 async def analyze_ipo_from_upload(
-    file: UploadFile = File(...),
+    file: UploadFile = File(...),  # noqa: B008
 ) -> FullIPOAnalysisResponse:
     """
     Run full IPO analysis from an uploaded file.
