@@ -17,7 +17,7 @@ numpy==1.26.3
 pandas==2.1.4
 
 # HTTP Client (for testing)
-httpx==0.26.0
+httpx==0.28.1
 
 # Multipart form parsing (required for file upload endpoints)
 python-multipart==0.0.32
